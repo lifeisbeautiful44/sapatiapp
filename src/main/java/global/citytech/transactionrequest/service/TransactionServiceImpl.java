@@ -9,6 +9,9 @@ import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
 import jakarta.inject.Inject;
 
+import java.util.List;
+import java.util.Optional;
+
 public class TransactionServiceImpl implements TransactionService {
 
     @Inject
@@ -18,7 +21,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public ApiResponse<?> requestMoney(TransactionDto transactionDto) {
-
 
         User validLender = validateLender(transactionDto);
         User validBorrower =  validateBorrower(transactionDto);
@@ -56,12 +58,20 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkPreviousTransactionExists(Long lenderId, Long borrowerId) {
 
-        if(    transacitonRepository.existsByLenderIdAndBorrowerId(lenderId,borrowerId))
-            throw new IllegalArgumentException("Transaction is already made");
+           if( transacitonRepository.findByBorrowerIdAndStatus(borrowerId,"PENDING").isEmpty())
+           {
+               Optional<Transaction> user = transacitonRepository.findByLenderIdAndBorrowerIdAndStatus(lenderId,borrowerId,"PENDING");
+
+               if(user.isPresent()) {
+                   throw new IllegalArgumentException("You already have pending transaction, transaction failed..");
+               }
+           }else
+           {
+               throw new IllegalArgumentException("You already have pending transaction, transaction failed..");
+           }
+
 
     }
-
-
 
 }
 

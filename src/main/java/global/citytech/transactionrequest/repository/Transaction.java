@@ -1,12 +1,12 @@
 package global.citytech.transactionrequest.repository;
 
 import io.micronaut.core.annotation.Introspected;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.DateCreated;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.annotation.Nullable;
 
 import java.math.BigDecimal;
 
@@ -23,30 +23,31 @@ public class Transaction {
 
     private Long lenderId;
 
-    private BigDecimal amount;
+    private Double amount;
+
 
     private String status;
 
     @DateCreated
     private String requestDate;
 
-    @Nullable(inherited = true)
-    private BigDecimal interestRate;
+    @Nullable
+    private Double interestRate;
 
-    @Nullable(inherited = true)
+    @Nullable
     private String paidDate;
 
-    @Nullable(inherited = true)
+    @Nullable
     private String timeLeft;
 
-    private Long willPay;
+    private int willPay;
 
     public Transaction() {
     }
 
     ;
 
-    public Transaction(Long id, Long borrowerId, Long lenderId, BigDecimal amount, String status, String requestDate, BigDecimal interestRate, String paidDate, String timeLeft, Long willPay) {
+    public Transaction(Long id, Long borrowerId, Long lenderId, Double amount, String status, String requestDate, @Nullable Double interestRate, @Nullable String paidDate, @Nullable String timeLeft, int willPay) {
         this.id = id;
         this.borrowerId = borrowerId;
         this.lenderId = lenderId;
@@ -83,11 +84,12 @@ public class Transaction {
         this.lenderId = lenderId;
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(
+                                  Double amount) {
         this.amount = amount;
     }
 
@@ -95,7 +97,8 @@ public class Transaction {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(
+                              String status) {
         this.status = status;
     }
 
@@ -107,35 +110,39 @@ public class Transaction {
         this.requestDate = requestDate;
     }
 
-    public BigDecimal getInterestRate() {
+    @Nullable
+    public Double getInterestRate() {
         return interestRate;
     }
 
-    public void setInterestRate(BigDecimal interestRate) {
+    public void setInterestRate(@Nullable Double interestRate) {
         this.interestRate = interestRate;
     }
 
+    @Nullable
     public String getPaidDate() {
         return paidDate;
     }
 
-    public void setPaidDate(String paidDate) {
+    public void setPaidDate(  @Nullable
+                                String paidDate) {
         this.paidDate = paidDate;
     }
 
+    @Nullable
     public String getTimeLeft() {
         return timeLeft;
     }
 
-    public void setTimeLeft(String timeLeft) {
+    public void setTimeLeft(@Nullable String timeLeft) {
         this.timeLeft = timeLeft;
     }
 
-    public Long getWillPay() {
+    public int getWillPay() {
         return willPay;
     }
 
-    public void setWillPay(Long willPay) {
+    public void setWillPay(int willPay) {
         this.willPay = willPay;
     }
 

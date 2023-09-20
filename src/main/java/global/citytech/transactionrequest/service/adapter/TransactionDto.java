@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 @Serdeable
 public class TransactionDto {
 
-    private BigDecimal amount;
+    private Double amount;
 
-    private Long willPay;
+    private int willPay;
 
     private String borrowerUserName;
 
@@ -43,26 +43,26 @@ public class TransactionDto {
         this.lenderUserName = lenderUserName;
     }
 
-    public TransactionDto(BigDecimal amount, Long willPay, String borrowerUserName, String lenderUserName) {
+    public TransactionDto(Double amount, int willPay, String borrowerUserName, String lenderUserName) {
         this.amount = amount;
         this.willPay = willPay;
         this.borrowerUserName =borrowerUserName;
         this.lenderUserName =lenderUserName;
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public Long getWillPay() {
+    public int getWillPay() {
         return willPay;
     }
 
-    public void setWillPay(Long willPay) {
+    public void setWillPay(int willPay) {
         this.willPay = willPay;
     }
 
