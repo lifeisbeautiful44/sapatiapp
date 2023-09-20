@@ -9,6 +9,7 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
+
     public ApiResponse(int code, String message, T data) {
         this.code = code;
         this.message = message;

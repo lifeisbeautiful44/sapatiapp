@@ -13,9 +13,41 @@ public class TransactionDto {
 
     private Long willPay;
 
-    public TransactionDto(BigDecimal amount, Long willPay) {
+    private String borrowerUserName;
+
+    private String lenderUserName;
+
+    public String getBorrowerUserName() {
+        return borrowerUserName;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionDto{" +
+                "amount=" + amount +
+                ", willPay=" + willPay +
+                ", borrowerUserName='" + borrowerUserName + '\'' +
+                ", lenderUserName='" + lenderUserName + '\'' +
+                '}';
+    }
+
+    public void setBorrowerUserName(String borrowerUserName) {
+        this.borrowerUserName = borrowerUserName;
+    }
+
+    public String getLenderUserName() {
+        return lenderUserName;
+    }
+
+    public void setLenderUserName(String lenderUserName) {
+        this.lenderUserName = lenderUserName;
+    }
+
+    public TransactionDto(BigDecimal amount, Long willPay, String borrowerUserName, String lenderUserName) {
         this.amount = amount;
         this.willPay = willPay;
+        this.borrowerUserName =borrowerUserName;
+        this.lenderUserName =lenderUserName;
     }
 
     public BigDecimal getAmount() {
@@ -34,11 +66,4 @@ public class TransactionDto {
         this.willPay = willPay;
     }
 
-    @Override
-    public String toString() {
-        return "TransactionDto{" +
-                "amount=" + amount +
-                ", willPay=" + willPay +
-                '}';
-    }
 }

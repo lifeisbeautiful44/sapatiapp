@@ -31,7 +31,6 @@ public class BorrowerServiceImpl implements BorrowerService {
                             lenderRequestInfo.setFirstName(lender.getFirstName());
                             lenderRequestInfo.setLastName(lender.getLastName());
                             lenderRequestInfo.setUserName(lender.getUserName());
-
                             return lenderRequestInfo;
                         }
                 ).collect(Collectors.toList());

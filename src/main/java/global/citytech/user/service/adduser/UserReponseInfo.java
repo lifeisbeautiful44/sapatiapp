@@ -1,7 +1,10 @@
 package global.citytech.user.service.adduser;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
+
+
 
 @Introspected
 @Serdeable
@@ -10,6 +13,8 @@ public class UserReponseInfo {
     private String lastName;
     private String userName;
     private String userType;
+
+
 
     public UserReponseInfo(String firstName, String lastName, String userName, String userType) {
         this.firstName = firstName;

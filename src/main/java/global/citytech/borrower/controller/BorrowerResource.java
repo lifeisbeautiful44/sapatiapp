@@ -2,7 +2,6 @@ package global.citytech.borrower.controller;
 
 
 import global.citytech.borrower.service.listlender.BorrowerService;
-import global.citytech.transactionrequest.entity.Transaction;
 import global.citytech.transactionrequest.service.TransactionService;
 import global.citytech.transactionrequest.service.adapter.TransactionDto;
 import global.citytech.user.repository.User;
@@ -32,14 +31,18 @@ public class BorrowerResource {
 
     }
 
-    @Post("/request-money/{lenderId}/{borrowerId}")
-    public HttpResponse<ApiResponse<?>> requestMoney(@PathVariable Long lenderId, @PathVariable  Long borrowerId, @Body TransactionDto transactionDto) {
+    @Post("/request-money")
+    public HttpResponse<ApiResponse<?>> requestMoney( @Body TransactionDto transactionDto) {
 
+        try {
+            ApiResponse requestMade = transactionService.requestMoney( transactionDto);
 
-        ApiResponse requestMade = transactionService.requestMoney(lenderId, borrowerId, transactionDto);
-
-        return HttpResponse.ok().body(requestMade);
+            return HttpResponse.ok().body(requestMade);
+        } catch (IllegalArgumentException e) {
+            return HttpResponse.badRequest().body(new ApiResponse<>(400, "Failed",e.getMessage()));
+        }
 
 
     }
 }
+

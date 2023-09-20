@@ -20,7 +20,8 @@ public class AddUserServiceImpl implements AddUserService {
         try {
             validateUserRequest(user);
             User registeredUser = userRepository.save(user);
-            UserReponseInfo userRequestInfo = Mapper.userRequestInfo(registeredUser);
+
+            UserReponseInfo userRequestInfo = Mapper.userReponseInfo(registeredUser);
             ApiResponse<UserReponseInfo> createUserApiResponse = new ApiResponse<>(200, "user has been successfully created", userRequestInfo);
             return createUserApiResponse;
 

@@ -1,6 +1,6 @@
 package global.citytech.transactionrequest.service;
 
-import global.citytech.transactionrequest.entity.Transaction;
+import global.citytech.transactionrequest.repository.Transaction;
 import global.citytech.transactionrequest.repository.TransacitonRepository;
 import global.citytech.transactionrequest.service.adapter.TransactionDto;
 import global.citytech.transactionrequest.service.adapter.mapper.Mapper;
@@ -17,44 +17,51 @@ public class TransactionServiceImpl implements TransactionService {
     UserRepository userRepository;
 
     @Override
-    public ApiResponse<?> requestMoney(Long lenderId, Long borrowerId, TransactionDto transactionDto) {
+    public ApiResponse<?> requestMoney(TransactionDto transactionDto) {
 
-        User validLender = validateLender(lenderId);
-        User validBorrower = validateBorrower(borrowerId);
+
+        User validLender = validateLender(transactionDto);
+        User validBorrower =  validateBorrower(transactionDto);
 
         if ((validLender.getStatus() && validBorrower.getStatus())) {
-            checkPreviousTransactionExists(lenderId,borrowerId);
-            Transaction mappedTransaction = Mapper.MapTransactionDtoToEntity(transactionDto, lenderId, borrowerId);
+            checkPreviousTransactionExists(validLender.getId(),validBorrower.getId());
+            Transaction mappedTransaction = Mapper.MapTransactionDtoToEntity(transactionDto, validLender.getId(), validBorrower.getId());
             Transaction requestMade = transacitonRepository.save(mappedTransaction);
             ApiResponse apiResponse = new ApiResponse<>(200, "Money request has made successfully", requestMade);
             return apiResponse;
+
         } else {
-            throw new IllegalArgumentException("Borrower or Lender is not in a valid status to make the request");
+   throw new IllegalArgumentException("Borrower or Lender is not in a valid status to make the request");
         }
+    }
+
+
+    private User validateLender(TransactionDto transactionDto) {
+
+        String lenderUserName = transactionDto.getLenderUserName();
+
+        return     userRepository.findByUserNameAndUserType(lenderUserName,"LENDER").orElseThrow(
+                () -> { throw new IllegalArgumentException(lenderUserName +" doesnot exist as  LENDER");}
+        );
+    }
+
+    private User validateBorrower(TransactionDto transactionDto) {
+        String borrowerUserName =  transactionDto.getBorrowerUserName();
+
+        return   userRepository.findByUserNameAndUserType(borrowerUserName,"BORROWER").orElseThrow(
+                () -> { throw new IllegalArgumentException(borrowerUserName +" doesnot exist as BORROWER" );}
+        );
+
     }
 
     private void checkPreviousTransactionExists(Long lenderId, Long borrowerId) {
 
-        throw new IllegalArgumentException("Transaction is already made");
-    }
-
-    private User validateBorrower(Long borrowerId) {
-        User borrower = userRepository.findByIdAndUserType(borrowerId, "BORROWER").orElseThrow(
-                () -> {
-                    throw new IllegalArgumentException("Borrower unspecified");
-                }
-        );
-        return borrower;
+        if(    transacitonRepository.existsByLenderIdAndBorrowerId(lenderId,borrowerId))
+            throw new IllegalArgumentException("Transaction is already made");
 
     }
 
-    private User validateLender(Long lenderId) {
 
-        User lender = userRepository.findByIdAndUserType(lenderId, "LENDER").orElseThrow(
-                () -> {
-                    throw new IllegalArgumentException("Lender unspecified");
-                });
-        return lender;
-    }
+
 }
 

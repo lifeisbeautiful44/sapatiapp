@@ -40,7 +40,7 @@ public class Mapper {
         return user;
     }
 
-    public static UserReponseInfo userRequestInfo(User user) {
+    public static UserReponseInfo userReponseInfo(User user) {
         UserReponseInfo addUserRequestInfo = new UserReponseInfo();
         addUserRequestInfo.setFirstName(user.getFirstName());
         addUserRequestInfo.setLastName(user.getLastName());

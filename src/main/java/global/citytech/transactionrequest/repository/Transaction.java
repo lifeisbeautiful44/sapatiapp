@@ -1,4 +1,4 @@
-package global.citytech.transactionrequest.entity;
+package global.citytech.transactionrequest.repository;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
