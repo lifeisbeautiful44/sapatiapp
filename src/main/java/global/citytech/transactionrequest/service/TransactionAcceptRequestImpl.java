@@ -1,5 +1,6 @@
 package global.citytech.transactionrequest.service;
 
+import global.citytech.cashflow.service.CashFlowSevice;
 import global.citytech.transactionrequest.repository.TransacitonRepository;
 import global.citytech.transactionrequest.repository.Transaction;
 import global.citytech.transactionrequest.service.adapter.TransactionAcceptDto;
@@ -18,6 +19,10 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Inject
     private TransacitonRepository transacitonRepository;
 
+    @Inject
+    private CashFlowSevice cashFlowSevice;
+
+
     @Override
     public ApiResponse acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
 
@@ -34,16 +39,24 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
              Transaction pendingTransaction = transacitonRepository.findByLenderIdAndBorrowerIdAndStatus(validateLender.getId(), validateBorrower.getId(), "PENDING")
                     .orElseThrow(
                             () -> {
-                                throw new IllegalArgumentException("No Pending transaction to to accept the request");
+                                throw new IllegalArgumentException("No Pending transaction to  accept the request");
                             }
                     );
+
+             //if the lender has sufficient amount or not
+            cashFlowSevice.isSufficientBalance(pendingTransaction.getBorrowerId(),pendingTransaction.getAmount());
             pendingTransaction.setStatus("ACCEPTED");
+
+
             pendingTransaction.setInterestRate(simpleIntresetRate(pendingTransaction) + pendingTransaction.getAmount());
-            transacitonRepository.update(pendingTransaction);
+           Transaction acceptedTransaction =  transacitonRepository.update(pendingTransaction);
+           //redirecting to the CashInfo service
+            cashFlowSevice.updateCashTransactionAccepted(acceptedTransaction);
+
             return new ApiResponse<>(200, "Money request Accepeted",pendingTransaction);
 
         }else {
-            throw new IllegalArgumentException("No Request has made by "+ validateLender.getUserName());
+            throw new IllegalArgumentException("No Request has made to  "+ validateLender.getUserName() + "by "+ validateBorrower.getUserName());
         }
 
     }
@@ -51,6 +64,18 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     private User validateLender(TransactionAcceptDto transactionAcceptDto) {
         String lenderUserName = transactionAcceptDto.getLenderUserName();
 
+        User userExist = userRepository.findByUserName(lenderUserName).orElseThrow(
+                () -> {throw new IllegalArgumentException("No user found");}
+        );
+
+        System.out.println(userExist);
+        System.out.println(lenderUserName);
+        System.out.println(userExist.getId());
+        System.out.println(userExist.getStatus());
+        if( userExist.getStatus() == false)
+        {
+            throw new IllegalArgumentException(userExist.getFirstName() + " is not verified too make the money request");
+        }
         return userRepository.findByUserNameAndUserType(lenderUserName, "LENDER").orElseThrow(
                 () -> {
                     throw new IllegalArgumentException(lenderUserName + " doesnot exist of type: LENDER");
@@ -60,6 +85,15 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
 
     private User validateBorrower(TransactionAcceptDto transactionAcceptDto) {
         String borrowerUserName = transactionAcceptDto.getBorroweUserName();
+
+        User userExist = userRepository.findByUserName(borrowerUserName).orElseThrow(
+                () -> {throw new IllegalArgumentException("No user found");}
+        );
+
+        if( userExist.getStatus() == false)
+        {
+            throw new IllegalArgumentException(userExist.getFirstName() + " is not verified too make the money request");
+        }
 
         return userRepository.findByUserNameAndUserType(borrowerUserName, "BORROWER").orElseThrow(
                 () -> {
@@ -72,27 +106,16 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     private double simpleIntresetRate(Transaction transaction)
     {
       double amount =   transaction.getAmount();
-        System.out.println(amount);
-        System.out.println(transaction.getWillPay());
        Double time  =    (double)transaction.getWillPay()/365;
-        System.out.println(time);
-
-
         if(amount <= 5000)
       {
           return  (amount * time * 5) /100;
-
       } else if (amount <= 25000) {
-          System.out.println((amount * time * 0.05) /100);
           return  (amount * time * 10) /100;
-
-
       }else if (amount <= 50000){
           return (amount * time * 12) /100;
       }else {
           return  amount;
       }
     }
-
-
 }

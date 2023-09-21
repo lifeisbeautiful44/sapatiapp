@@ -1,5 +1,7 @@
 package global.citytech.user.service.adduser;
 
+import global.citytech.cashflow.repository.CashFlow;
+import global.citytech.cashflow.service.CashFlowSevice;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
@@ -9,7 +11,8 @@ import jakarta.inject.Inject;
 
 public class AddUserServiceImpl implements AddUserService {
     @Inject
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     public AddUserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -34,11 +37,11 @@ public class AddUserServiceImpl implements AddUserService {
 
         if (userRepository.existsByUserName(userRequest.getUserName())) {
             throw new IllegalArgumentException(userRequest.getUserName() + " already exist !! ");
-        }  if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
+        }
+        if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("Password mis-match.");
         }
-
     }
-
 }
+
 

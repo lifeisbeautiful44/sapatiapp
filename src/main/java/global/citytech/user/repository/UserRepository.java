@@ -11,14 +11,9 @@ import java.util.Optional;
 @Repository
 @JdbcRepository(dialect = Dialect.POSTGRES)
 public interface UserRepository extends CrudRepository<User, Long> {
-
     Boolean existsByUserName(String userName);
-
     Optional<User> findByUserName(String userName);
-
     Optional<User> findByUserNameAndUserType(String userName, String userType);
-
     List<User> findByUserType(String userType);
-
     Optional<User> findByIdAndUserType(Long id, String userType);
 }

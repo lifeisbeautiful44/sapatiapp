@@ -12,16 +12,12 @@ import jakarta.inject.Inject;
 
 @Controller("/api/v1/")
 public class LenderController {
-
     @Inject
     TransactionAcceptRequest transactionAcceptRequest;
-
     @Put("/accept-money-request")
     public HttpResponse<ApiResponse> acceptTransactionRequest(@Body  TransactionAcceptDto acceptDto) {
-
         try {
             ApiResponse apiResponse = transactionAcceptRequest.acceptTransactionRequest(acceptDto);
-
             return HttpResponse.ok().body(apiResponse);
         } catch (IllegalArgumentException e) {
             return HttpResponse.badRequest().body(new ApiResponse<>(400, "failed", e.getMessage()));

@@ -25,22 +25,26 @@ public class TransactionServiceImpl implements TransactionService {
         User validLender = validateLender(transactionDto);
         User validBorrower =  validateBorrower(transactionDto);
 
-        if ((validLender.getStatus() && validBorrower.getStatus())) {
-            checkPreviousTransactionExists(validLender.getId(),validBorrower.getId());
+             checkPreviousTransactionExists(validLender.getId(),validBorrower.getId());
             Transaction mappedTransaction = Mapper.MapTransactionDtoToEntity(transactionDto, validLender.getId(), validBorrower.getId());
             Transaction requestMade = transacitonRepository.save(mappedTransaction);
             ApiResponse apiResponse = new ApiResponse<>(200, "Money request has made successfully", requestMade);
             return apiResponse;
 
-        } else {
-   throw new IllegalArgumentException("Borrower or Lender is not in a valid status to make the request");
-        }
+
     }
 
 
     private User validateLender(TransactionDto transactionDto) {
 
         String lenderUserName = transactionDto.getLenderUserName();
+        User userExist =   userRepository.findByUserName(lenderUserName).orElseThrow(
+                () -> {throw new IllegalArgumentException("No user found");}
+        );
+        if( userExist.getStatus() == false)
+        {
+            throw new IllegalArgumentException(userExist.getFirstName() + "  -> type [LENDER] " + " is not verified too make the money request");
+        }
 
         return     userRepository.findByUserNameAndUserType(lenderUserName,"LENDER").orElseThrow(
                 () -> { throw new IllegalArgumentException(lenderUserName +" doesnot exist as  LENDER");}
@@ -50,6 +54,14 @@ public class TransactionServiceImpl implements TransactionService {
     private User validateBorrower(TransactionDto transactionDto) {
         String borrowerUserName =  transactionDto.getBorrowerUserName();
 
+      User userExist =   userRepository.findByUserName(borrowerUserName).orElseThrow(
+                () -> {throw new IllegalArgumentException("No user found");}
+        );
+
+        if( userExist.getStatus() == false)
+        {
+            throw new IllegalArgumentException(userExist.getFirstName() +  " ->  type [BORROWER] " + " is not verified too make the money request");
+        }
         return   userRepository.findByUserNameAndUserType(borrowerUserName,"BORROWER").orElseThrow(
                 () -> { throw new IllegalArgumentException(borrowerUserName +" doesnot exist as BORROWER" );}
         );
@@ -58,20 +70,18 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkPreviousTransactionExists(Long lenderId, Long borrowerId) {
 
-           if( transacitonRepository.findByBorrowerIdAndStatus(borrowerId,"PENDING").isEmpty())
-           {
                Optional<Transaction> user = transacitonRepository.findByLenderIdAndBorrowerIdAndStatus(lenderId,borrowerId,"PENDING");
 
                if(user.isPresent()) {
-                   throw new IllegalArgumentException("You already have pending transaction, transaction failed..");
+                   throw new IllegalArgumentException("You already have pending transaction, transaction failed.." );
                }
-           }else
-           {
-               throw new IllegalArgumentException("You already have pending transaction, transaction failed..");
-           }
 
 
     }
+
+
+
+
 
 }
 

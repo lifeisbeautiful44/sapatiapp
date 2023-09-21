@@ -13,14 +13,11 @@ import java.util.Optional;
 @JdbcRepository(dialect = Dialect.POSTGRES)
 
 public interface TransacitonRepository extends CrudRepository<Transaction, Long> {
-
     Boolean existsByLenderIdAndBorrowerId(long lenderId, long borrowerId);
-
     Optional<Transaction> findByLenderIdAndBorrowerId(long lenderId, long borrowerId);
-
     Optional<Transaction> findByLenderIdAndBorrowerIdAndStatus(long lenderId, long borrowerId,String status);
-
     List<Transaction> findByBorrowerIdAndStatus(long BorrowerId, String status);
+ //   List<Transaction> findByBorrowerIdAndLenderIdAndStatus(long borrowerId, long lenderId, String status);
 
 
 
