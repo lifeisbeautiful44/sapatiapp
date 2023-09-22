@@ -2,6 +2,7 @@ package global.citytech.user.service.adaptor;
 
 import io.micronaut.serde.annotation.Serdeable;
 
+
 @Serdeable
 public class ApiResponse<T> {
     private int code;

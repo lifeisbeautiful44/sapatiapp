@@ -1,6 +1,8 @@
 package global.citytech.transactionrequest.service;
 
 import global.citytech.cashflow.service.CashFlowSevice;
+import global.citytech.transactionhistory.service.TransactionHistoryServiceImpl;
+import global.citytech.transactionhistory.service.TsansactionHistoryService;
 import global.citytech.transactionrequest.repository.TransacitonRepository;
 import global.citytech.transactionrequest.repository.Transaction;
 import global.citytech.transactionrequest.service.adapter.TransactionAcceptDto;
@@ -22,12 +24,11 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Inject
     private CashFlowSevice cashFlowSevice;
 
+    @Inject
+    private TsansactionHistoryService transactionHistoryService;
 
     @Override
     public ApiResponse acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
-
-        String lenderUserName = acceptTransaction.getLenderUserName();
-        String borrowerUserName = acceptTransaction.getBorroweUserName();
 
         //for lender
         User validateLender = validateLender(acceptTransaction);
@@ -43,15 +44,20 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
                             }
                     );
 
-             //if the lender has sufficient amount or not
-            cashFlowSevice.isSufficientBalance(pendingTransaction.getBorrowerId(),pendingTransaction.getAmount());
-            pendingTransaction.setStatus("ACCEPTED");
 
+            System.out.println("Enter");
+             //if the lender has sufficient amount or not
+            cashFlowSevice.isSufficientBalance(pendingTransaction.getLenderId(),pendingTransaction.getAmount());
+            pendingTransaction.setStatus("ACCEPTED");
 
             pendingTransaction.setInterestRate(simpleIntresetRate(pendingTransaction) + pendingTransaction.getAmount());
            Transaction acceptedTransaction =  transacitonRepository.update(pendingTransaction);
            //redirecting to the CashInfo service
             cashFlowSevice.updateCashTransactionAccepted(acceptedTransaction);
+            // Updating the transaction history
+            System.out.println("Transacition History Now on UNPAID");
+            transactionHistoryService.updateTransactionAccepted(acceptedTransaction);
+
 
             return new ApiResponse<>(200, "Money request Accepeted",pendingTransaction);
 
@@ -68,10 +74,6 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
                 () -> {throw new IllegalArgumentException("No user found");}
         );
 
-        System.out.println(userExist);
-        System.out.println(lenderUserName);
-        System.out.println(userExist.getId());
-        System.out.println(userExist.getStatus());
         if( userExist.getStatus() == false)
         {
             throw new IllegalArgumentException(userExist.getFirstName() + " is not verified too make the money request");
@@ -84,7 +86,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     }
 
     private User validateBorrower(TransactionAcceptDto transactionAcceptDto) {
-        String borrowerUserName = transactionAcceptDto.getBorroweUserName();
+        String borrowerUserName = transactionAcceptDto.getBorrowerUserName();
 
         User userExist = userRepository.findByUserName(borrowerUserName).orElseThrow(
                 () -> {throw new IllegalArgumentException("No user found");}

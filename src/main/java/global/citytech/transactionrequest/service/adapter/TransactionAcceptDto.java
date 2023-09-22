@@ -8,12 +8,12 @@ import io.micronaut.serde.annotation.Serdeable;
 public class TransactionAcceptDto {
 
     private String status;
-    private String borroweUserName;
+    private String borrowerUserName;
     private String lenderUserName;
 
     public TransactionAcceptDto(String status, String borroweUserName, String lenderUserName) {
         this.status = status;
-        this.borroweUserName = borroweUserName;
+        this.borrowerUserName = borroweUserName;
         this.lenderUserName = lenderUserName;
     }
 
@@ -25,12 +25,12 @@ public class TransactionAcceptDto {
         this.status = status;
     }
 
-    public String getBorroweUserName() {
-        return borroweUserName;
+    public String getBorrowerUserName() {
+        return borrowerUserName;
     }
 
-    public void setBorroweUserName(String borroweUserName) {
-        this.borroweUserName = borroweUserName;
+    public void setBorrowerUserName(String borroweUserName) {
+        this.borrowerUserName = borroweUserName;
     }
 
     public String getLenderUserName() {
@@ -45,7 +45,7 @@ public class TransactionAcceptDto {
     public String toString() {
         return "TransactionAcceptDto{" +
                 "status='" + status + '\'' +
-                ", borroweUserName='" + borroweUserName + '\'' +
+                ", borroweUserName='" + borrowerUserName + '\'' +
                 ", lenderUserName='" + lenderUserName + '\'' +
                 '}';
     }

@@ -26,5 +26,6 @@ public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {
         newVerifiedUserCashTable.saveNewUserCashInformation(veirfiedUser);
         ApiResponse<String> userUserApiResponse = new ApiResponse<>(200, "UserStatus has been successfully active", "UserName: " + veirfiedUser.getUserName() + " is activated");
         return userUserApiResponse;
+
     }
 }

@@ -28,28 +28,31 @@ public class ClassFlowServiceImpl implements CashFlowSevice {
         System.out.println(cashFlowRepository);
     }
     public String loadBalance(CashDto cashDto) {
-        CashFlow depoistCash = new CashFlow();
+       // CashFlow depoistCash = new CashFlow();
         User userName = userRepository.findByUserName(cashDto.getUserName()).orElseThrow(() ->
         {
             throw new IllegalArgumentException("User not found");
         });
-        if (userName.getStatus() == false) {
-            throw new IllegalArgumentException("Only verified user can send request.");
-        }
-        if (userName.getUserType().equals("BORROWER")) {
 
+        if (userName.getStatus() == false) {
+            throw new IllegalArgumentException("Only verified user can load balance.");
+        }
+
+        //In case further validation
+        //Optional<CashFlow> depoistCash =  cashFlowRepository.findById(userName.getId());
+        CashFlow depoistCash = cashFlowRepository.findById(userName.getId()).get();
+        System.out.println(depoistCash);
+        if (userName.getUserType().equals("BORROWER")) {
             if (cashDto.getAmount() >= 50000) {
                 return "Transacition limit is only 50000. ";
             }
-            depoistCash.setBorrowerId(userName.getId());
             depoistCash.setCashAmount(cashDto.getAmount());
-            cashFlowRepository.save(depoistCash);
-            return "amount has been successfull updated";
+            cashFlowRepository.update(depoistCash);
+            return "amount has been successfully updated";
         } else {
-            depoistCash.setLenderId(userName.getId());
             depoistCash.setCashAmount(cashDto.getAmount());
-            cashFlowRepository.save(depoistCash);
-            return "amount has been succesfully updated";
+            cashFlowRepository.update(depoistCash);
+            return "amount has been successfully updated";
         }
     }
     //saves the newly created user in CashInfo Table

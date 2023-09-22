@@ -14,27 +14,20 @@ public class TransactionHistory {
     @Id
     @GeneratedValue
     private Long id;
-
     private Long lenderId;
-
     private long borrowerId;
-
     private long transactionId;
-
-    private String status;
-
-    public TransactionHistory() {
-
-    }
-
-    public TransactionHistory(Long id, Long lenderId, long borrowerId, long transactionId, String status) {
+    private String transactionStatus;
+    private String paymentStatus;
+    public TransactionHistory() {};
+    public TransactionHistory(Long id, Long lenderId, long borrowerId, long transactionId, String transactionStatus, String paymentStatus) {
         this.id = id;
         this.lenderId = lenderId;
         this.borrowerId = borrowerId;
         this.transactionId = transactionId;
-        this.status = status;
+        this.transactionStatus = transactionStatus;
+        this.paymentStatus = paymentStatus;
     }
-
     public Long getId() {
         return id;
     }
@@ -67,12 +60,20 @@ public class TransactionHistory {
         this.transactionId = transactionId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getTransactionStatus() {
+        return transactionStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setTransactionStatus(String transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     @Override
@@ -82,7 +83,10 @@ public class TransactionHistory {
                 ", lenderId=" + lenderId +
                 ", borrowerId=" + borrowerId +
                 ", transactionId=" + transactionId +
-                ", status='" + status + '\'' +
+                ", transactionStatus='" + transactionStatus + '\'' +
+                ", paymentStatus='" + paymentStatus + '\'' +
                 '}';
     }
 }
+
+

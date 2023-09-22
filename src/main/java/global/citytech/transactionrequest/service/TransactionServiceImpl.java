@@ -1,5 +1,6 @@
 package global.citytech.transactionrequest.service;
 
+import global.citytech.transactionhistory.service.TsansactionHistoryService;
 import global.citytech.transactionrequest.repository.Transaction;
 import global.citytech.transactionrequest.repository.TransacitonRepository;
 import global.citytech.transactionrequest.service.adapter.TransactionDto;
@@ -15,23 +16,28 @@ import java.util.Optional;
 public class TransactionServiceImpl implements TransactionService {
 
     @Inject
-    TransacitonRepository transacitonRepository;
+   private  TransacitonRepository transacitonRepository;
     @Inject
-    UserRepository userRepository;
+ private    UserRepository userRepository;
+
+    @Inject
+    private TsansactionHistoryService tsansactionHistoryService;
 
     @Override
     public ApiResponse<?> requestMoney(TransactionDto transactionDto) {
 
-        User validLender = validateLender(transactionDto);
         User validBorrower =  validateBorrower(transactionDto);
+        User validLender = validateLender(transactionDto);
 
-             checkPreviousTransactionExists(validLender.getId(),validBorrower.getId());
+
+        checkPreviousTransactionExists(validLender.getId(),validBorrower.getId());
             Transaction mappedTransaction = Mapper.MapTransactionDtoToEntity(transactionDto, validLender.getId(), validBorrower.getId());
             Transaction requestMade = transacitonRepository.save(mappedTransaction);
+            // created Transaction History
+            System.out.println("Transacition History Created with REQUEST_On_HOLD");
+            tsansactionHistoryService.create(requestMade);
             ApiResponse apiResponse = new ApiResponse<>(200, "Money request has made successfully", requestMade);
             return apiResponse;
-
-
     }
 
 
