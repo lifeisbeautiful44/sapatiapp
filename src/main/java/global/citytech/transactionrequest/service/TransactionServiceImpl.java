@@ -1,9 +1,11 @@
 package global.citytech.transactionrequest.service;
 
+import global.citytech.cashflow.service.CashFlowSevice;
 import global.citytech.transactionhistory.service.TsansactionHistoryService;
 import global.citytech.transactionrequest.repository.Transaction;
 import global.citytech.transactionrequest.repository.TransacitonRepository;
 import global.citytech.transactionrequest.service.adapter.TransactionDto;
+import global.citytech.transactionrequest.service.adapter.TransactionPaymentDto;
 import global.citytech.transactionrequest.service.adapter.mapper.Mapper;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
@@ -19,6 +21,7 @@ public class TransactionServiceImpl implements TransactionService {
    private  TransacitonRepository transacitonRepository;
     @Inject
  private    UserRepository userRepository;
+
 
     @Inject
     private TsansactionHistoryService tsansactionHistoryService;
@@ -39,6 +42,8 @@ public class TransactionServiceImpl implements TransactionService {
             ApiResponse apiResponse = new ApiResponse<>(200, "Money request has made successfully", requestMade);
             return apiResponse;
     }
+
+
 
 
     private User validateLender(TransactionDto transactionDto) {
@@ -81,7 +86,6 @@ public class TransactionServiceImpl implements TransactionService {
                if(user.isPresent()) {
                    throw new IllegalArgumentException("You already have pending transaction, transaction failed.." );
                }
-
 
     }
 

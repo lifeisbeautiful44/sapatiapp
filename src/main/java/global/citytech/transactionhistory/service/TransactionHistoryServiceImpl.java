@@ -33,7 +33,16 @@ public class TransactionHistoryServiceImpl implements TsansactionHistoryService 
         transactionHistory.setTransactionStatus(transaction.getStatus());
         transactionHistory.setPaymentStatus("UNPAID");
         transactionHistoryRepository.update(transactionHistory);
-
-
     }
+
+
+    public void updateTransactionPayment(Transaction transaction) {
+
+        TransactionHistory transactionHistory = transactionHistoryRepository.findById(transaction.getId()).get();
+        transactionHistory.setPaymentStatus("PAID");
+        transactionHistoryRepository.update(transactionHistory);
+    }
+
+
+
 }

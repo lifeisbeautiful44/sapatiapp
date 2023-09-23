@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Introspected
 @Serdeable
-public class TransactionDto {
+public class TransactionDto implements TransactionDI {
 
     private Double amount;
 

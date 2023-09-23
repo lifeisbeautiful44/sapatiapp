@@ -5,7 +5,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected
 @Serdeable
-public class TransactionAcceptDto {
+public class TransactionAcceptDto implements TransactionDI {
 
     private String status;
     private String borrowerUserName;

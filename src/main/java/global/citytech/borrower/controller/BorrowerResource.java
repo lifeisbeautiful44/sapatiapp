@@ -2,15 +2,14 @@ package global.citytech.borrower.controller;
 
 
 import global.citytech.borrower.service.listlender.BorrowerService;
+import global.citytech.transactionrequest.service.TransactionPaymentService;
 import global.citytech.transactionrequest.service.TransactionService;
 import global.citytech.transactionrequest.service.adapter.TransactionDto;
+import global.citytech.transactionrequest.service.adapter.TransactionPaymentDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.service.adaptor.ApiResponse;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -21,6 +20,11 @@ public class BorrowerResource {
     BorrowerService borrowerService;
     @Inject
     TransactionService transactionService;
+
+    @Inject
+    TransactionPaymentService transactionPaymentService;
+
+
     @Get("/lender-list")
     public HttpResponse<ApiResponse<List<User>>> getLenderList() {
         ApiResponse lenderList = borrowerService.getLenderList();
@@ -35,6 +39,13 @@ public class BorrowerResource {
         } catch (IllegalArgumentException e) {
             return HttpResponse.badRequest().body(new ApiResponse<>(400, "Failed", e.getMessage()));
         }
+    }
+
+    @Put("/return/money")
+    public  void returnPayment(@Body  TransactionPaymentDto transactionPaymentDto)
+    {
+
+        transactionPaymentService.makePayment(transactionPaymentDto);
     }
 }
 

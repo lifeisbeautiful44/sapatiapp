@@ -1,5 +1,6 @@
 package global.citytech.cashflow.repository;
 
+import io.micronaut.context.annotation.Prototype;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;

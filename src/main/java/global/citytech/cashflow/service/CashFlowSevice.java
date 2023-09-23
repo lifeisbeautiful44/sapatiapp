@@ -9,4 +9,7 @@ public interface CashFlowSevice {
     // every time a new user is created, saves the user , with inirtial values .
     void saveNewUserCashInformation(User verifiedUser);
      Boolean isSufficientBalance(Long userId, double checkBalance);
+
+
+     void updatePaymentSuccessfull(Long borrowerId , Long lenerdID, Double amount);
 }

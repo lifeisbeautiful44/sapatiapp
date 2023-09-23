@@ -51,7 +51,9 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
             pendingTransaction.setStatus("ACCEPTED");
 
             pendingTransaction.setInterestRate(simpleIntresetRate(pendingTransaction) + pendingTransaction.getAmount());
+
            Transaction acceptedTransaction =  transacitonRepository.update(pendingTransaction);
+
            //redirecting to the CashInfo service
             cashFlowSevice.updateCashTransactionAccepted(acceptedTransaction);
             // Updating the transaction history
