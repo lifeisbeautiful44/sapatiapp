@@ -8,7 +8,6 @@ import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
-import java.util.logging.SocketHandler;
 
 public class ClassFlowServiceImpl implements CashFlowSevice {
     @Inject
@@ -29,8 +28,9 @@ public class ClassFlowServiceImpl implements CashFlowSevice {
         cashFlowRepository.update(updatedBorrowerCash);
         System.out.println(cashFlowRepository);
     }
+
     public String loadBalance(CashDto cashDto) {
-       // CashFlow depoistCash = new CashFlow();
+        // CashFlow depoistCash = new CashFlow();
         User userName = userRepository.findByUserName(cashDto.getUserName()).orElseThrow(() ->
         {
             throw new IllegalArgumentException("User not found");
@@ -39,24 +39,30 @@ public class ClassFlowServiceImpl implements CashFlowSevice {
         if (userName.getStatus() == false) {
             throw new IllegalArgumentException("Only verified user can load balance.");
         }
-
+        System.out.println(userName);
+        System.out.println(userName.getId());
         //In case further validation
         //Optional<CashFlow> depoistCash =  cashFlowRepository.findById(userName.getId());
-        CashFlow depoistCash = cashFlowRepository.findById(userName.getId()).get();
+        CashFlow depoistCash = cashFlowRepository.findByLenderIdOrBorrowerId(userName.getId(), userName.getId()).get();
+
+
         System.out.println(depoistCash);
+        System.out.println(userName.getUserType());
+
         if (userName.getUserType().equals("BORROWER")) {
             if (cashDto.getAmount() >= 50000) {
                 return "Transacition limit is only 50000. ";
             }
-            depoistCash.setCashAmount(cashDto.getAmount());
+            depoistCash.setCashAmount(cashDto.getAmount() + depoistCash.getCashAmount());
             cashFlowRepository.update(depoistCash);
             return "amount has been successfully updated";
         } else {
-            depoistCash.setCashAmount(cashDto.getAmount());
+            depoistCash.setCashAmount(cashDto.getAmount() + depoistCash.getCashAmount());
             cashFlowRepository.update(depoistCash);
             return "amount has been successfully updated";
         }
     }
+
     //saves the newly created user in CashInfo Table
     @Override
     public void saveNewUserCashInformation(User verifiedUser) {
@@ -69,12 +75,13 @@ public class ClassFlowServiceImpl implements CashFlowSevice {
         newUserCashTable.setCashAmount(0.0);
         cashFlowRepository.save(newUserCashTable);
     }
+
     @Override
     public Boolean isSufficientBalance(Long userId, double checkBalance) {
 
-        Optional<CashFlow> userBalanceCheck = cashFlowRepository.findById(userId);
+        Optional<CashFlow> userBalanceCheck = cashFlowRepository.findByLenderIdOrBorrowerId(userId,userId);
         System.out.println(userBalanceCheck);
-        if (userBalanceCheck.get().getCashAmount() > checkBalance) {
+        if (userBalanceCheck.get().getCashAmount() >= checkBalance) {
             return true;
         } else {
             throw new IllegalArgumentException("Not sufficient balance to make the request");
@@ -82,24 +89,29 @@ public class ClassFlowServiceImpl implements CashFlowSevice {
     }
 
 
-    public void updatePaymentSuccessfull(Long borrowerId , Long lenderId, Double amount)
-    {
-        CashFlow borrowerCashInformation = cashFlowRepository.findById(borrowerId).get();
+    public void updatePaymentSuccessfull(Long borrowerId, Long lenderId, Double amount) {
+        CashFlow borrowerCashInformation = cashFlowRepository.findByBorrowerId(borrowerId).get();
         //updating borrower information , subtracting  amount
         System.out.println(borrowerCashInformation);
-        System.out.println(borrowerCashInformation.getCashAmount() - amount);
+
         borrowerCashInformation.setCashAmount(borrowerCashInformation.getCashAmount() - amount);
         cashFlowRepository.update(borrowerCashInformation);
 
-        CashFlow lenderCashInformation = cashFlowRepository.findById(lenderId).get();
+        CashFlow lenderCashInformation = cashFlowRepository.findByLenderId(lenderId).get();
         System.out.println(lenderCashInformation);
         //updating lender information , adding   amount
-        System.out.println(lenderCashInformation.getCashAmount() + amount);
         lenderCashInformation.setCashAmount(lenderCashInformation.getCashAmount() + amount);
         cashFlowRepository.update(lenderCashInformation);
 
+    }
 
-
+   public void   checkAmountPaid(Double amountToReturn , Double amountProivded)
+    {
+        System.out.println(amountToReturn + " "+ amountProivded);
+        if(amountProivded < amountToReturn)
+        {
+            throw new IllegalArgumentException( "Return amount  is : " + amountToReturn + "  Provided amount: "+ amountProivded);
+        }
 
     }
 

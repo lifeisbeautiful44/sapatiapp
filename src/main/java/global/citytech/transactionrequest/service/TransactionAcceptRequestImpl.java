@@ -1,7 +1,6 @@
 package global.citytech.transactionrequest.service;
 
 import global.citytech.cashflow.service.CashFlowSevice;
-import global.citytech.transactionhistory.service.TransactionHistoryServiceImpl;
 import global.citytech.transactionhistory.service.TsansactionHistoryService;
 import global.citytech.transactionrequest.repository.TransacitonRepository;
 import global.citytech.transactionrequest.repository.Transaction;
@@ -14,16 +13,12 @@ import jakarta.inject.Inject;
 import javax.swing.*;
 
 public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
-
     @Inject
     private UserRepository userRepository;
-
     @Inject
     private TransacitonRepository transacitonRepository;
-
     @Inject
     private CashFlowSevice cashFlowSevice;
-
     @Inject
     private TsansactionHistoryService transactionHistoryService;
 

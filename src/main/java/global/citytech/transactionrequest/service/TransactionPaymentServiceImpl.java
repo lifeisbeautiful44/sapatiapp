@@ -16,14 +16,12 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
 
     @Inject
     private CashFlowSevice cashFlowSevice;
-
     @Inject
     private UserRepository userRepository;
-
-
+    @Inject
+    private TransactionHistoryRepository transactionHistoryRepository;
     @Inject
     private TransactionHistoryServiceImpl transactionHistoryService;
-
 
 
 
@@ -36,27 +34,25 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         User validLender = validateLender(transactionPaymentDto);
         System.out.println(validBorrower);
         System.out.println(validLender);
-        Transaction transaction = transacitonRepository.findByLenderIdAndBorrowerIdWhereStatus(validLender.getId(), validBorrower.getId(),"ACCEPTED").get();
-        System.out.println(transaction);
-        System.out.println("hello");
-        System.out.println(transactionPaymentDto.getAmount());
+
+        TransactionHistory transactionHistory = transactionHistoryRepository.findByLenderIdAndBorrowerIdWherePaymentStatus(validLender.getId(), validBorrower.getId(), "UNPAID").get();
+
+        Transaction transaction = transacitonRepository.findById(transactionHistory.getTransactionId()).get();
+
         //check If the borrower has been amount to paid .
         cashFlowSevice.isSufficientBalance(validBorrower.getId(),transactionPaymentDto.getAmount());
 
+        //check the balance to be paid ,and balance given
+        cashFlowSevice.checkAmountPaid(transaction.getAmount(),transactionPaymentDto.getAmount());
 
         //updatecashflow or make payment
-
         cashFlowSevice.updatePaymentSuccessfull(validBorrower.getId(), validLender.getId(), transactionPaymentDto.getAmount());
         System.out.println("Payment is successfully made");
-
 
         //update transaction history from Unpaid to paid
         transactionHistoryService.updateTransactionPayment(transaction);
 
-        System.out.println("Transaction has been succefully updated from paid to unpaid");
-
-
-
+        System.out.println("Transaction has been successfully updated from paid to unpaid");
 
     }
 

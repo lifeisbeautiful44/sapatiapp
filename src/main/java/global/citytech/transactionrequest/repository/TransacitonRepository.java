@@ -20,8 +20,8 @@ public interface TransacitonRepository extends CrudRepository<Transaction, Long>
     List<Transaction> findByBorrowerIdAndStatus(long BorrowerId, String status);
  //   List<Transaction> findByBorrowerIdAndLenderIdAndStatus(long borrowerId, long lenderId, String status);
 
-    @Query("SELECT * FROM Transaction t WHERE t.lender_id = :lenderId AND t.borrower_id = :borrowerId AND t.status = :status")
-    Optional<Transaction> findByLenderIdAndBorrowerIdWhereStatus(long lenderId, long borrowerId, String status);
+//    @Query("SELECT * FROM Transaction t WHERE t.lender_id = :lenderId AND t.borrower_id = :borrowerId AND t.status = :status")
+//    List<Transaction> findByLenderIdAndBorrowerIdWhereStatus(long lenderId, long borrowerId, String status);
 
 
 

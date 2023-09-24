@@ -20,7 +20,12 @@ public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {
         User updateUserStatus = userRepository.findByUserName(userStatus.getUserName()).orElseThrow(
                 () -> new IllegalArgumentException("The provided user doesnot exist")
         );
+        if(updateUserStatus.getStatus() == true)
+        {
+            throw new IllegalArgumentException("The user status is already verified.");
+        }
         updateUserStatus.setStatus(true);
+
         User veirfiedUser = userRepository.update(updateUserStatus);
         // setting the initial value of the new  user in the CashInformationTable
         newVerifiedUserCashTable.saveNewUserCashInformation(veirfiedUser);
