@@ -11,24 +11,41 @@ public class TransactionDto implements TransactionDI {
 
     private Double amount;
 
-    private int willPay;
+    private long estimatedReturnTime;
 
     private String borrowerUserName;
 
     private String lenderUserName;
 
-    public String getBorrowerUserName() {
-        return borrowerUserName;
+
+    public TransactionDto() {
     }
 
-    @Override
-    public String toString() {
-        return "TransactionDto{" +
-                "amount=" + amount +
-                ", willPay=" + willPay +
-                ", borrowerUserName='" + borrowerUserName + '\'' +
-                ", lenderUserName='" + lenderUserName + '\'' +
-                '}';
+    public TransactionDto(Double amount, long estimatedReturnTime, String borrowerUserName, String lenderUserName) {
+        this.amount = amount;
+        this.estimatedReturnTime = estimatedReturnTime;
+        this.borrowerUserName = borrowerUserName;
+        this.lenderUserName = lenderUserName;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public long getEstimatedReturnTime() {
+        return estimatedReturnTime;
+    }
+
+    public void setEstimatedReturnTime(long estimatedReturnTime) {
+        this.estimatedReturnTime = estimatedReturnTime;
+    }
+
+    public String getBorrowerUserName() {
+        return borrowerUserName;
     }
 
     public void setBorrowerUserName(String borrowerUserName) {
@@ -43,27 +60,13 @@ public class TransactionDto implements TransactionDI {
         this.lenderUserName = lenderUserName;
     }
 
-    public TransactionDto(Double amount, int willPay, String borrowerUserName, String lenderUserName) {
-        this.amount = amount;
-        this.willPay = willPay;
-        this.borrowerUserName =borrowerUserName;
-        this.lenderUserName =lenderUserName;
+    @Override
+    public String toString() {
+        return "TransactionDto{" +
+                "amount=" + amount +
+                ", estimatedReturnTime=" + estimatedReturnTime +
+                ", borrowerUserName='" + borrowerUserName + '\'' +
+                ", lenderUserName='" + lenderUserName + '\'' +
+                '}';
     }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public int getWillPay() {
-        return willPay;
-    }
-
-    public void setWillPay(int willPay) {
-        this.willPay = willPay;
-    }
-
 }

@@ -7,30 +7,33 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 public class TransactionAcceptDto implements TransactionDI {
 
-    private String status;
+    private Double interestRate;
     private String borrowerUserName;
     private String lenderUserName;
 
-    public TransactionAcceptDto(String status, String borroweUserName, String lenderUserName) {
-        this.status = status;
-        this.borrowerUserName = borroweUserName;
+    public TransactionAcceptDto() {
+    }
+
+    public TransactionAcceptDto(Double interestRate, String borrowerUserName, String lenderUserName) {
+        this.interestRate = interestRate;
+        this.borrowerUserName = borrowerUserName;
         this.lenderUserName = lenderUserName;
     }
 
-    public String getStatus() {
-        return status;
+    public Double getInterestRate() {
+        return interestRate;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setInterestRate(Double interestRate) {
+        this.interestRate = interestRate;
     }
 
     public String getBorrowerUserName() {
         return borrowerUserName;
     }
 
-    public void setBorrowerUserName(String borroweUserName) {
-        this.borrowerUserName = borroweUserName;
+    public void setBorrowerUserName(String borrowerUserName) {
+        this.borrowerUserName = borrowerUserName;
     }
 
     public String getLenderUserName() {
@@ -44,8 +47,8 @@ public class TransactionAcceptDto implements TransactionDI {
     @Override
     public String toString() {
         return "TransactionAcceptDto{" +
-                "status='" + status + '\'' +
-                ", borroweUserName='" + borrowerUserName + '\'' +
+                "interestRate=" + interestRate +
+                ", borrowerUserName='" + borrowerUserName + '\'' +
                 ", lenderUserName='" + lenderUserName + '\'' +
                 '}';
     }

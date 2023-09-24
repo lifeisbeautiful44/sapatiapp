@@ -9,9 +9,12 @@ public interface CashFlowSevice {
     String loadBalance(CashDto cashDto);
     // every time a new user is created, saves the user , with inirtial values .
     void saveNewUserCashInformation(User verifiedUser);
-    Boolean isSufficientBalance(Long userId, double checkBalance);
-    void updatePaymentSuccessfull(Long borrowerId, Long lenerdID, Double amount);
+    Boolean isSufficientBalance(Transaction transaction, double checkBalance);
 
+    Boolean checkLenderBalance(Transaction transaction, double checkBalance);
+
+    Boolean checkBorrowerBalance(Transaction transaction, double checkBalance);
+    void updatePaymentSuccessfull(Long borrowerId, Long lenerdID, Double intrestAmount);
 
     void checkAmountPaid(Double amountToReturn , Double amountProivded);
 }

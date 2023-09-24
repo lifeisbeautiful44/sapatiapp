@@ -16,8 +16,10 @@ import java.util.Optional;
 public interface TransacitonRepository extends CrudRepository<Transaction, Long> {
     Boolean existsByLenderIdAndBorrowerId(long lenderId, long borrowerId);
     Optional<Transaction> findByLenderIdAndBorrowerId(long lenderId, long borrowerId);
+
     Optional<Transaction> findByLenderIdAndBorrowerIdAndStatus(long lenderId, long borrowerId,String status);
     List<Transaction> findByBorrowerIdAndStatus(long BorrowerId, String status);
+
  //   List<Transaction> findByBorrowerIdAndLenderIdAndStatus(long borrowerId, long lenderId, String status);
 
 //    @Query("SELECT * FROM Transaction t WHERE t.lender_id = :lenderId AND t.borrower_id = :borrowerId AND t.status = :status")

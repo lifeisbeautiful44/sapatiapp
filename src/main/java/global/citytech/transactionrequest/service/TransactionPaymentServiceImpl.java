@@ -12,6 +12,9 @@ import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 public class TransactionPaymentServiceImpl implements TransactionPaymentService {
 
     @Inject
@@ -40,17 +43,22 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         Transaction transaction = transacitonRepository.findById(transactionHistory.getTransactionId()).get();
 
         //check If the borrower has been amount to paid .
-        cashFlowSevice.isSufficientBalance(validBorrower.getId(),transactionPaymentDto.getAmount());
+        cashFlowSevice.checkBorrowerBalance(transaction,transactionPaymentDto.getAmount());
+
 
         //check the balance to be paid ,and balance given
-        cashFlowSevice.checkAmountPaid(transaction.getAmount(),transactionPaymentDto.getAmount());
+        cashFlowSevice.checkAmountPaid(intrestAmount(transaction),transactionPaymentDto.getAmount());
 
         //updatecashflow or make payment
-        cashFlowSevice.updatePaymentSuccessfull(validBorrower.getId(), validLender.getId(), transactionPaymentDto.getAmount());
+        cashFlowSevice.updatePaymentSuccessfull(validBorrower.getId(), validLender.getId(), intrestAmount(transaction));
         System.out.println("Payment is successfully made");
 
         //update transaction history from Unpaid to paid
         transactionHistoryService.updateTransactionPayment(transaction);
+
+        //update the transaction with amount that has been paid.
+        transaction.setAmountWithInterest(intrestAmount(transaction));
+        transacitonRepository.update(transaction);
 
         System.out.println("Transaction has been successfully updated from paid to unpaid");
 
@@ -68,7 +76,7 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         }
 
         return     userRepository.findByUserNameAndUserType(lenderUserName,"LENDER").orElseThrow(
-                () -> { throw new IllegalArgumentException(lenderUserName +" doesnot exist as  LENDER");}
+                () -> { throw new IllegalArgumentException(lenderUserName +" doesn't exist as  LENDER");}
         );
     }
 
@@ -84,8 +92,27 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
             throw new IllegalArgumentException(userExist.getFirstName() +  " ->  type [BORROWER] " + " is not verified too make the money request");
         }
         return   userRepository.findByUserNameAndUserType(borrowerUserName,"BORROWER").orElseThrow(
-                () -> { throw new IllegalArgumentException(borrowerUserName +" doesnot exist as BORROWER" );}
+                () -> { throw new IllegalArgumentException(borrowerUserName +" doesn't exist as BORROWER" );}
         );
 
     }
+
+    private Double intrestAmount(Transaction transaction)
+    {
+        LocalDateTime paymentDate = transaction.getPaymentAcceptedDate();
+        LocalDateTime todayDate = LocalDateTime.now();
+
+        long daysPassed = ChronoUnit.DAYS.between(paymentDate, todayDate);
+
+        double time = (daysPassed == 0) ? 1.0 / 365.0 : (double) daysPassed / 365.0;
+
+        double principal = transaction.getAmount();
+        double rate = transaction.getInterestRate() / 100.0;
+
+        double amountWithInterest = (principal * rate * time);
+
+        return amountWithInterest + principal;
+
+}
+
 }

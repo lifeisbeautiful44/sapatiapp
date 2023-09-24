@@ -77,12 +77,41 @@ public class ClassFlowServiceImpl implements CashFlowSevice {
     }
 
     @Override
-    public Boolean isSufficientBalance(Long userId, double checkBalance) {
+    public Boolean isSufficientBalance(Transaction transaction, double checkBalance) {
 
-        Optional<CashFlow> userBalanceCheck = cashFlowRepository.findByLenderIdOrBorrowerId(userId,userId);
+        Optional<CashFlow> userBalanceCheck = cashFlowRepository.findByLenderIdOrBorrowerId(transaction.getLenderId(), transaction.getBorrowerId());
         System.out.println(userBalanceCheck);
         if (userBalanceCheck.get().getCashAmount() >= checkBalance) {
             return true;
+        } else {
+            throw new IllegalArgumentException("Not sufficient balance to make the request");
+        }
+    }
+
+    @Override
+    public Boolean checkLenderBalance(Transaction transaction, double checkBalance) {
+
+        Optional<CashFlow> userBalanceCheck = cashFlowRepository.findByLenderId(transaction.getLenderId());
+
+        System.out.println(userBalanceCheck);
+        if (userBalanceCheck.get().getCashAmount() >= checkBalance) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Not sufficient balance to make the request");
+        }
+
+    }
+
+    @Override
+    public Boolean checkBorrowerBalance(Transaction transaction, double checkBalance) {
+
+
+        Optional<CashFlow> userBalanceCheck = cashFlowRepository.findByBorrowerId(transaction.getBorrowerId());
+        System.out.println(userBalanceCheck);
+        if( userBalanceCheck.get().getCashAmount() >= checkBalance )
+        {
+            return true;
+
         } else {
             throw new IllegalArgumentException("Not sufficient balance to make the request");
         }

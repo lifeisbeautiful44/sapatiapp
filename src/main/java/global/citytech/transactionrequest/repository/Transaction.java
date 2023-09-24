@@ -8,6 +8,8 @@ import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.annotation.Nullable;
 
+import java.time.LocalDateTime;
+
 
 @Serdeable
 @Introspected
@@ -25,13 +27,14 @@ public class Transaction {
     @Nullable
     private Double interestRate;
     @Nullable
-    private String paidDate;
+    private LocalDateTime  paymentAcceptedDate;
     @Nullable
-    private String timeLeft;
-    private int willPay;
+    private Double amountWithInterest;
+    private Long estimatedReturnTime;
     public Transaction() {
     };
-    public Transaction(Long id, Long borrowerId, Long lenderId, Double amount, String status, String requestDate, @Nullable Double interestRate, @Nullable String paidDate, @Nullable String timeLeft, int willPay) {
+
+    public Transaction(Long id, Long borrowerId, Long lenderId, Double amount, String status, String requestDate, @Nullable Double interestRate, @Nullable LocalDateTime paymentAcceptedDate, @Nullable Double amountWithInterest, Long estimatedReturnTime) {
         this.id = id;
         this.borrowerId = borrowerId;
         this.lenderId = lenderId;
@@ -39,76 +42,94 @@ public class Transaction {
         this.status = status;
         this.requestDate = requestDate;
         this.interestRate = interestRate;
-        this.paidDate = paidDate;
-        this.timeLeft = timeLeft;
-        this.willPay = willPay;
+        this.paymentAcceptedDate = paymentAcceptedDate;
+        this.amountWithInterest = amountWithInterest;
+        this.estimatedReturnTime = estimatedReturnTime;
     }
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public Long getBorrowerId() {
         return borrowerId;
     }
+
     public void setBorrowerId(Long borrowerId) {
         this.borrowerId = borrowerId;
     }
+
     public Long getLenderId() {
         return lenderId;
     }
+
     public void setLenderId(Long lenderId) {
         this.lenderId = lenderId;
     }
+
     public Double getAmount() {
         return amount;
     }
-    public void setAmount(
-            Double amount) {
+
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
+
     public String getStatus() {
         return status;
     }
-    public void setStatus(
-            String status) {
+
+    public void setStatus(String status) {
         this.status = status;
     }
+
     public String getRequestDate() {
         return requestDate;
     }
+
     public void setRequestDate(String requestDate) {
         this.requestDate = requestDate;
     }
+
     @Nullable
     public Double getInterestRate() {
         return interestRate;
     }
+
     public void setInterestRate(@Nullable Double interestRate) {
         this.interestRate = interestRate;
     }
+
     @Nullable
-    public String getPaidDate() {
-        return paidDate;
+    public LocalDateTime getPaymentAcceptedDate() {
+        return paymentAcceptedDate;
     }
-    public void setPaidDate(@Nullable
-                            String paidDate) {
-        this.paidDate = paidDate;
+
+    public void setPaymentAcceptedDate(@Nullable LocalDateTime paymentAcceptedDate) {
+        this.paymentAcceptedDate = paymentAcceptedDate;
     }
+
     @Nullable
-    public String getTimeLeft() {
-        return timeLeft;
+    public Double getAmountWithInterest() {
+        return amountWithInterest;
     }
-    public void setTimeLeft(@Nullable String timeLeft) {
-        this.timeLeft = timeLeft;
+
+    public void setAmountWithInterest(@Nullable Double amountWithInterest) {
+        this.amountWithInterest = amountWithInterest;
     }
-    public int getWillPay() {
-        return willPay;
+
+    public Long getEstimatedReturnTime() {
+        return estimatedReturnTime;
     }
-    public void setWillPay(int willPay) {
-        this.willPay = willPay;
+
+    public void setEstimatedReturnTime(Long estimatedReturnTime) {
+        this.estimatedReturnTime = estimatedReturnTime;
     }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -119,9 +140,9 @@ public class Transaction {
                 ", status='" + status + '\'' +
                 ", requestDate='" + requestDate + '\'' +
                 ", interestRate=" + interestRate +
-                ", paidDate='" + paidDate + '\'' +
-                ", timeLeft='" + timeLeft + '\'' +
-                ", willPay=" + willPay +
+                ", paymentAcceptedDate=" + paymentAcceptedDate +
+                ", amountWithInterest=" + amountWithInterest +
+                ", estimatedReturnTime=" + estimatedReturnTime +
                 '}';
     }
 }

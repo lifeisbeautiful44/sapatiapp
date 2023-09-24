@@ -10,7 +10,7 @@ public class Mapper {
 
         Transaction transaction = new Transaction();
         transaction.setAmount(transactionDto.getAmount());
-        transaction.setWillPay(transactionDto.getWillPay());
+        transaction.setEstimatedReturnTime(transactionDto.getEstimatedReturnTime());
         transaction.setLenderId(lenderId);
         transaction.setBorrowerId(borrowerId);
         transaction.setStatus("PENDING");
