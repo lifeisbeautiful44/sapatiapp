@@ -1,6 +1,6 @@
-package global.citytech.transactionrequest.service;
+package global.citytech.transaction.service.acceptrequest;
 
-import global.citytech.transactionrequest.service.adapter.TransactionAcceptDto;
+import global.citytech.transaction.service.adapter.TransactionAcceptDto;
 import global.citytech.user.service.adaptor.ApiResponse;
 
 public interface TransactionAcceptRequest {

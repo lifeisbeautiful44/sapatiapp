@@ -1,4 +1,4 @@
-package global.citytech.transactionrequest.repository;
+package global.citytech.transaction.repository;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.data.annotation.DateCreated;

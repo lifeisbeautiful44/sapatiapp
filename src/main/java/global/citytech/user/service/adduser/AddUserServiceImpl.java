@@ -1,7 +1,5 @@
 package global.citytech.user.service.adduser;
 
-import global.citytech.cashflow.repository.CashFlow;
-import global.citytech.cashflow.service.CashFlowSevice;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;

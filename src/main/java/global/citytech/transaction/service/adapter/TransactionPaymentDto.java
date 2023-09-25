@@ -1,11 +1,11 @@
-package global.citytech.transactionrequest.service.adapter;
+package global.citytech.transaction.service.adapter;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected
 @Serdeable
-public class TransactionPaymentDto implements TransactionDI {
+public class TransactionPaymentDto {
 
     private String lenderUserName;
 

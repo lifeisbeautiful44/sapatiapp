@@ -1,7 +1,7 @@
-package global.citytech.transactionrequest.service.adapter.mapper;
+package global.citytech.transaction.service.adapter.mapper;
 
-import global.citytech.transactionrequest.repository.Transaction;
-import global.citytech.transactionrequest.service.adapter.TransactionDto;
+import global.citytech.transaction.repository.Transaction;
+import global.citytech.transaction.service.adapter.TransactionDto;
 
 public class Mapper {
 

@@ -1,13 +1,11 @@
-package global.citytech.transactionrequest.service.adapter;
+package global.citytech.transaction.service.adapter;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
-import java.math.BigDecimal;
-
 @Introspected
 @Serdeable
-public class TransactionDto implements TransactionDI {
+public class TransactionDto {
 
     private Double amount;
 

@@ -1,14 +1,11 @@
 package global.citytech.cashflow.repository;
 
 
-import global.citytech.transactionrequest.repository.Transaction;
-import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
-import io.micronaut.data.annotation.sql.JoinColumn;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected

@@ -2,13 +2,10 @@ package global.citytech.transactionhistory.service;
 
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
-import global.citytech.transactionrequest.repository.TransacitonRepository;
-import global.citytech.transactionrequest.repository.Transaction;
+import global.citytech.transaction.repository.Transaction;
 import jakarta.inject.Inject;
 
-import java.util.Optional;
-
-public class TransactionHistoryServiceImpl implements TsansactionHistoryService {
+public class TransactionHistoryServiceImpl implements TransactionHistoryService {
 
     @Inject
     TransactionHistoryRepository transactionHistoryRepository;

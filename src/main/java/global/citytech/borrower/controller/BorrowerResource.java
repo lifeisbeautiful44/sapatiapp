@@ -2,10 +2,13 @@ package global.citytech.borrower.controller;
 
 
 import global.citytech.borrower.service.listlender.BorrowerService;
-import global.citytech.transactionrequest.service.TransactionPaymentService;
-import global.citytech.transactionrequest.service.TransactionService;
-import global.citytech.transactionrequest.service.adapter.TransactionDto;
-import global.citytech.transactionrequest.service.adapter.TransactionPaymentDto;
+import global.citytech.transaction.service.payment.TransactionPaymentService;
+import global.citytech.transaction.service.request.TransactionService;
+import global.citytech.transaction.service.adapter.TransactionDto;
+import global.citytech.transaction.service.adapter.TransactionPaymentDto;
+import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryListService;
+import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryDto;
+import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryResponse;
 import global.citytech.user.repository.User;
 import global.citytech.user.service.adaptor.ApiResponse;
 import io.micronaut.http.HttpResponse;
@@ -20,6 +23,9 @@ public class BorrowerResource {
     BorrowerService borrowerService;
     @Inject
     TransactionService transactionService;
+
+    @Inject
+    TransactionHistoryListService transactionHistoryList;
 
     @Inject
     TransactionPaymentService transactionPaymentService;
@@ -46,6 +52,13 @@ public class BorrowerResource {
     {
 
         transactionPaymentService.makePayment(transactionPaymentDto);
+    }
+
+    @Post("/list")
+    public HttpResponse<ApiResponse> getList(@Body TransactionHistoryDto transactionDto)
+    {
+    ApiResponse  response =   transactionHistoryList.findAllBorrowerTransactionHistory(transactionDto);
+     return HttpResponse.ok().body(response);
     }
 }
 

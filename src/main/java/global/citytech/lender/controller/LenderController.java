@@ -1,8 +1,8 @@
 package global.citytech.lender.controller;
 
 
-import global.citytech.transactionrequest.service.TransactionAcceptRequest;
-import global.citytech.transactionrequest.service.adapter.TransactionAcceptDto;
+import global.citytech.transaction.service.acceptrequest.TransactionAcceptRequest;
+import global.citytech.transaction.service.adapter.TransactionAcceptDto;
 import global.citytech.user.service.adaptor.ApiResponse;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;

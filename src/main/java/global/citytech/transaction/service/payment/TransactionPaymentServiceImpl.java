@@ -1,13 +1,13 @@
-package global.citytech.transactionrequest.service;
+package global.citytech.transaction.service.payment;
 
-import global.citytech.cashflow.service.CashFlowSevice;
+import global.citytech.cashflow.service.cashflow.CashFlowSevice;
+import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
-import global.citytech.transactionhistory.service.TransactionHistoryServiceImpl;
-import global.citytech.transactionrequest.repository.TransacitonRepository;
-import global.citytech.transactionrequest.repository.Transaction;
-import global.citytech.transactionrequest.service.adapter.TransactionDto;
-import global.citytech.transactionrequest.service.adapter.TransactionPaymentDto;
+import global.citytech.transactionhistory.service.TransactionHistoryService;
+import global.citytech.transaction.repository.TransacitonRepository;
+import global.citytech.transaction.repository.Transaction;
+import global.citytech.transaction.service.adapter.TransactionPaymentDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
@@ -19,47 +19,45 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
 
     @Inject
     private CashFlowSevice cashFlowSevice;
+
+    @Inject
+    private CheckBalanceService checkBalanceService;
     @Inject
     private UserRepository userRepository;
     @Inject
     private TransactionHistoryRepository transactionHistoryRepository;
     @Inject
-    private TransactionHistoryServiceImpl transactionHistoryService;
-
-
+    private TransactionHistoryService transactionHistoryService;
 
     @Inject
-    private TransacitonRepository transacitonRepository;
+    private TransacitonRepository transacitionRepository;
     public void makePayment(TransactionPaymentDto transactionPaymentDto)
     {
 
         User validBorrower =  validateBorrower(transactionPaymentDto);
         User validLender = validateLender(transactionPaymentDto);
-        System.out.println(validBorrower);
-        System.out.println(validLender);
 
-        TransactionHistory transactionHistory = transactionHistoryRepository.findByLenderIdAndBorrowerIdWherePaymentStatus(validLender.getId(), validBorrower.getId(), "UNPAID").get();
+        TransactionHistory transactionHistory = transactionHistoryRepository.findByLenderIdAndBorrowerIdWherePaymentStatus(validLender.getId(), validBorrower.getId(), "UNPAID").orElseThrow(
+                () -> {throw  new IllegalArgumentException("No previous UNPAID transaction ");}
+        );
+        Transaction transaction = transacitionRepository.findById(transactionHistory.getTransactionId()).get();
 
-        Transaction transaction = transacitonRepository.findById(transactionHistory.getTransactionId()).get();
-
-        //check If the borrower has been amount to paid .
-        cashFlowSevice.checkBorrowerBalance(transaction,transactionPaymentDto.getAmount());
+        /*check If the borrower has been amount to paid .*/
+        checkBalanceService.checkBorrowerBalance(transaction,transactionPaymentDto.getAmount());
 
         //check the balance to be paid ,and balance given
-        cashFlowSevice.checkAmountPaid(intrestAmount(transaction),transactionPaymentDto.getAmount());
+        checkBalanceService.checkAmountPaid(interestAmount(transaction),transactionPaymentDto.getAmount());
 
-        //updatecashflow or make payment
-        cashFlowSevice.updatePaymentSuccessfull(validBorrower.getId(), validLender.getId(), intrestAmount(transaction));
-        System.out.println("Payment is successfully made");
+        //update cashflow or make payment
+        cashFlowSevice.updatePaymentSuccessfull(validBorrower.getId(), validLender.getId(), interestAmount(transaction));
 
         //update transaction history from Unpaid to paid
         transactionHistoryService.updateTransactionPayment(transaction);
 
         //update the transaction with amount that has been paid.
-        transaction.setAmountWithInterest(intrestAmount(transaction));
-        transacitonRepository.update(transaction);
+        transaction.setAmountWithInterest(interestAmount(transaction));
+        transacitionRepository.update(transaction);
 
-        System.out.println("Transaction has been successfully updated from paid to unpaid");
 
     }
 
@@ -69,7 +67,7 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         User userExist =   userRepository.findByUserName(lenderUserName).orElseThrow(
                 () -> {throw new IllegalArgumentException("No user found");}
         );
-        if( userExist.getStatus() == false)
+        if(!userExist.getStatus())
         {
             throw new IllegalArgumentException(userExist.getFirstName() + "  -> type [LENDER] " + " is not verified too make the money request");
         }
@@ -86,7 +84,8 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
                 () -> {throw new IllegalArgumentException("No user found");}
         );
 
-        if( userExist.getStatus() == false)
+
+        if(!userExist.getStatus())
         {
             throw new IllegalArgumentException(userExist.getFirstName() +  " ->  type [BORROWER] " + " is not verified too make the money request");
         }
@@ -96,14 +95,14 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
 
     }
 
-    private Double intrestAmount(Transaction transaction)
+    private Double interestAmount(Transaction transaction)
     {
         LocalDateTime paymentDate = transaction.getPaymentAcceptedDate();
         LocalDateTime todayDate = LocalDateTime.now();
 
         long daysPassed = ChronoUnit.DAYS.between(paymentDate, todayDate);
 
-        double time = (daysPassed == 0) ? 1.0 / 365.0 : (double) daysPassed / 365.0;
+        double time = (daysPassed == 0) ? 1.0 / 365.0 : daysPassed / 365.0;
 
         double principal = transaction.getAmount();
         double rate = transaction.getInterestRate() / 100.0;

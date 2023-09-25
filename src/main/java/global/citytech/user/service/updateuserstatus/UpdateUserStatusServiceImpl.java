@@ -1,14 +1,11 @@
 package global.citytech.user.service.updateuserstatus;
 
 
-import global.citytech.cashflow.repository.CashFlow;
-import global.citytech.cashflow.service.CashFlowSevice;
+import global.citytech.cashflow.service.cashflow.CashFlowSevice;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
 import jakarta.inject.Inject;
-
-import java.util.Optional;
 
 public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {
     @Inject
