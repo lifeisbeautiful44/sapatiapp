@@ -45,7 +45,6 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         //check If the borrower has been amount to paid .
         cashFlowSevice.checkBorrowerBalance(transaction,transactionPaymentDto.getAmount());
 
-
         //check the balance to be paid ,and balance given
         cashFlowSevice.checkAmountPaid(intrestAmount(transaction),transactionPaymentDto.getAmount());
 

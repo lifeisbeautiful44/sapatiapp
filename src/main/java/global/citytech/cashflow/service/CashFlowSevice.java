@@ -14,7 +14,7 @@ public interface CashFlowSevice {
     Boolean checkLenderBalance(Transaction transaction, double checkBalance);
 
     Boolean checkBorrowerBalance(Transaction transaction, double checkBalance);
-    void updatePaymentSuccessfull(Long borrowerId, Long lenerdID, Double intrestAmount);
+    void updatePaymentSuccessfull(Long borrowerId, Long lenderId, Double intrestAmount);
 
     void checkAmountPaid(Double amountToReturn , Double amountProivded);
 }
