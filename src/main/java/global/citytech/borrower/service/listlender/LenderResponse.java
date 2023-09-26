@@ -6,13 +6,13 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected
 @Serdeable
-public class LenderRequestInfo {
+public class LenderResponse {
     private String firstName;
     private String lastName;
     private String userName;
-    public LenderRequestInfo() {
+    public LenderResponse() {
     }
-    public LenderRequestInfo(String firstName, String lastName, String userName) {
+    public LenderResponse(String firstName, String lastName, String userName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;

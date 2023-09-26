@@ -5,7 +5,7 @@ import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
-import global.citytech.transaction.repository.TransacitonRepository;
+import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionPaymentDto;
 import global.citytech.user.repository.User;
@@ -30,7 +30,7 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
     private TransactionHistoryService transactionHistoryService;
 
     @Inject
-    private TransacitonRepository transacitionRepository;
+    private TransacitionRepository transacitionRepository;
     public void makePayment(TransactionPaymentDto transactionPaymentDto)
     {
 

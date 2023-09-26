@@ -1,6 +1,6 @@
 package global.citytech.transactionhistory.service.transactionhistorylist;
 
-import global.citytech.transaction.repository.TransacitonRepository;
+import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
@@ -17,7 +17,7 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     @Inject
     UserRepository userRepository;
     @Inject
-    TransacitonRepository transacitonRepository;
+    TransacitionRepository transacitonRepository;
     @Inject
     TransactionHistoryRepository transactionHistoryRepository;
 

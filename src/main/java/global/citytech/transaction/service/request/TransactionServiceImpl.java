@@ -3,7 +3,7 @@ package global.citytech.transaction.service.request;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
-import global.citytech.transaction.repository.TransacitonRepository;
+import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionDto;
 import global.citytech.transaction.service.adapter.mapper.Mapper;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class TransactionServiceImpl implements TransactionService {
 
     @Inject
-    private TransacitonRepository transacitonRepository;
+    private TransacitionRepository transacitonRepository;
     @Inject
     private UserRepository userRepository;
     @Inject

@@ -14,7 +14,5 @@ import java.util.Optional;
 public interface CashFlowRepository extends CrudRepository<CashFlow,Long> {
     Optional<CashFlow> findByLenderId( long lenderId);
     Optional<CashFlow> findByBorrowerId(Long borrowerId);
-
     Optional<CashFlow> findByLenderIdOrBorrowerId(long lenderId, long borrowerId);
-
 }

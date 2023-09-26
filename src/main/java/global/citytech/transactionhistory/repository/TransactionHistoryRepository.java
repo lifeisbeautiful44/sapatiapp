@@ -13,19 +13,11 @@ import java.util.Optional;
 @Repository
 @JdbcRepository(dialect = Dialect.POSTGRES)
 public interface TransactionHistoryRepository extends CrudRepository<TransactionHistory, Long> {
-
-    @Query("SELECT * FROM transaction_history t WHERE t.lender_id = :lenderId AND t.borrower_id = :borrowerId AND t.status = :status")
-    List<TransactionHistory> findByLenderIdAndBorrowerIdWhereStatus(long lenderId, long borrowerId, String status);
-
     @Query("SELECT * FROM transaction_history t WHERE t.lender_id = :lenderId AND t.borrower_id = :borrowerId AND t.payment_status = :paymentStatus")
     Optional<TransactionHistory> findByLenderIdAndBorrowerIdWherePaymentStatus(long lenderId, long borrowerId, String paymentStatus);
-
     List<TransactionHistory> findByLenderId(Long lenderId);
     List<TransactionHistory> findByBorrowerId(Long borrowerId);
-
     List<TransactionHistory> findByBorrowerIdAndPaymentStatus(long borrowerId, String paymentStatus);
-
-   // List<TransactionHistory> findByBorrowerIdWherePaymentStatus(long borrowerId, String paymentStatus);
 
 
 }

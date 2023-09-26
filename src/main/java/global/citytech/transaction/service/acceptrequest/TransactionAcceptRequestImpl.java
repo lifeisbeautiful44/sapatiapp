@@ -3,7 +3,7 @@ package global.citytech.transaction.service.acceptrequest;
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
 import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
-import global.citytech.transaction.repository.TransacitonRepository;
+import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionAcceptDto;
 import global.citytech.user.repository.User;
@@ -17,7 +17,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Inject
     private UserRepository userRepository;
     @Inject
-    private TransacitonRepository transacitonRepository;
+    private TransacitionRepository transacitonRepository;
     @Inject
     private CashFlowSevice cashFlowSevice;
 
@@ -76,7 +76,6 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
         throw new IllegalArgumentException("Interest Rate should be greater than Zero.");
     }
     }
-
     private User validateLender(TransactionAcceptDto transactionAcceptDto) {
         String lenderUserName = transactionAcceptDto.getLenderUserName();
 
@@ -85,7 +84,6 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
                     throw new IllegalArgumentException("No user found");
                 }
         );
-
         if (userExist.getStatus() == false) {
             throw new IllegalArgumentException(userExist.getFirstName() + " is not verified too make the money request");
         }
@@ -95,7 +93,6 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
                 }
         );
     }
-
     private User validateBorrower(TransactionAcceptDto transactionAcceptDto) {
         String borrowerUserName = transactionAcceptDto.getBorrowerUserName();
 
