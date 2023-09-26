@@ -22,9 +22,9 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     TransactionHistoryRepository transactionHistoryRepository;
 
     @Override
-    public ApiResponse<List<TransactionHistoryResponse>> findAllBorrowerTransactionHistory(TransactionHistoryDto transactionHistory) {
+    public ApiResponse<List<TransactionHistoryResponse>> findAllTransactionHistory(TransactionHistoryDto transactionHistory) {
 
-
+        validateTransactionHistory(transactionHistory);
         User user = getUserByUsernameOrThrow(transactionHistory.getUserName());
         List<TransactionHistoryResponse> response = new ArrayList<>();
 
@@ -64,6 +64,14 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
             }
             return new ApiResponse<>(200, "No transaction history", response);
         }
+    }
+
+    private void validateTransactionHistory(TransactionHistoryDto transactionHistory) {
+
+        if (transactionHistory.getUserName().isEmpty()) {
+            throw new IllegalArgumentException("Username should not be empty.");
+        }
+
     }
 
 

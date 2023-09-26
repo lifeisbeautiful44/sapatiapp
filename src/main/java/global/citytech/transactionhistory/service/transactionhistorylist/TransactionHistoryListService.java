@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TransactionHistoryListService {
 
-    ApiResponse<List<TransactionHistoryResponse>> findAllBorrowerTransactionHistory(TransactionHistoryDto transactionHistory);
+    ApiResponse<List<TransactionHistoryResponse>> findAllTransactionHistory(TransactionHistoryDto transactionHistory);
 
 }

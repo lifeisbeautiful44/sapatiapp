@@ -29,7 +29,7 @@ public class Mapper {
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setConfirmPassword(userDto.getConfirmPassword());
-        user.setUserType(userDto.getUserType());
+        user.setUserType(userDto.getUserType().toUpperCase());
         user.setStatus(false);
         user.setCreatedAt(userDto.getCreatedAt());
 

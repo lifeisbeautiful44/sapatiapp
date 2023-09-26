@@ -24,8 +24,7 @@ public class BorrowerResource {
     @Inject
     TransactionService transactionService;
 
-    @Inject
-    TransactionHistoryListService transactionHistoryList;
+
 
     @Inject
     TransactionPaymentService transactionPaymentService;
@@ -54,11 +53,6 @@ public class BorrowerResource {
         transactionPaymentService.makePayment(transactionPaymentDto);
     }
 
-    @Post("/list")
-    public HttpResponse<ApiResponse> getList(@Body TransactionHistoryDto transactionDto)
-    {
-    ApiResponse  response =   transactionHistoryList.findAllBorrowerTransactionHistory(transactionDto);
-     return HttpResponse.ok().body(response);
-    }
+
 }
 

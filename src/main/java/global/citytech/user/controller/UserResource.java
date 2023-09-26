@@ -3,6 +3,8 @@ package global.citytech.user.controller;
 
 import global.citytech.cashflow.service.CashDto;
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
+import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryDto;
+import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryListService;
 import global.citytech.user.service.adaptor.ApiResponse;
 import global.citytech.user.service.adaptor.dto.CreateUserDto;
 import global.citytech.user.service.adduser.AddUserService;
@@ -13,6 +15,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
 
+
 @Controller("/api/v1/")
 public class UserResource {
     @Inject
@@ -21,6 +24,9 @@ public class UserResource {
   private  UpdateUserStatusService updateUserStatusService;
     @Inject
     private CashFlowSevice cashFlowSevice;
+
+    @Inject
+    TransactionHistoryListService transactionHistoryList;
     @Inject
     public UserResource(AddUserService addUserService,
                         UpdateUserStatusService updateUserStatusService) {
@@ -43,5 +49,12 @@ public class UserResource {
     {
        String message =  cashFlowSevice.loadBalance(cashDto);
        return  message;
+    }
+
+    @Post("/list")
+    public HttpResponse<ApiResponse> getList(@Body TransactionHistoryDto transactionDto)
+    {
+        ApiResponse  response =   transactionHistoryList.findAllTransactionHistory(transactionDto);
+        return HttpResponse.ok().body(response);
     }
 }

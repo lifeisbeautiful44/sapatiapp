@@ -1,5 +1,6 @@
 package global.citytech.transactionhistory.repository;
 
+import global.citytech.transaction.repository.Transaction;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
@@ -21,5 +22,10 @@ public interface TransactionHistoryRepository extends CrudRepository<Transaction
 
     List<TransactionHistory> findByLenderId(Long lenderId);
     List<TransactionHistory> findByBorrowerId(Long borrowerId);
+
+    List<TransactionHistory> findByBorrowerIdAndPaymentStatus(long borrowerId, String paymentStatus);
+
+   // List<TransactionHistory> findByBorrowerIdWherePaymentStatus(long borrowerId, String paymentStatus);
+
 
 }

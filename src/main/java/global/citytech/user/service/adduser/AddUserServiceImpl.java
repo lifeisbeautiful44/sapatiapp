@@ -17,27 +17,35 @@ public class AddUserServiceImpl implements AddUserService {
 
     @Override
     public ApiResponse<?> registerUser(CreateUserDto userDto) {
+        validateUserRequest(userDto);
         User user = Mapper.mapUserDtoToUserEntity(userDto);
-        try {
-            validateUserRequest(user);
-            User registeredUser = userRepository.save(user);
-
-            UserReponseInfo userRequestInfo = Mapper.userReponseInfo(registeredUser);
-            ApiResponse<UserReponseInfo> createUserApiResponse = new ApiResponse<>(200, "user has been successfully created", userRequestInfo);
-            return createUserApiResponse;
-
-        } catch (IllegalArgumentException e) {
-            return new ApiResponse<>(400, "Bad Request", e.getMessage());
-        }
+        User registeredUser = userRepository.save(user);
+        UserReponseInfo userRequestInfo = Mapper.userReponseInfo(registeredUser);
+        ApiResponse<UserReponseInfo> createUserApiResponse = new ApiResponse<>(200, "user has been successfully created", userRequestInfo);
+        return createUserApiResponse;
     }
 
-    private void validateUserRequest(User userRequest) {
-
-        if (userRepository.existsByUserName(userRequest.getUserName())) {
-            throw new IllegalArgumentException(userRequest.getUserName() + " already exist !! ");
+    private void validateUserRequest(CreateUserDto userDto) {
+        if (userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getUserType().isEmpty() || userDto.getPassword().isEmpty() || userDto.getConfirmPassword().isEmpty() || userDto.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("All the field are mandatory ");
         }
-        if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
+        if (userDto.getFirstName().contains(" ") || userDto.getLastName().contains(" ") || userDto.getUserType().contains(" ") || userDto.getEmail().contains(" ")) {
+            throw new IllegalArgumentException("Fields should not be empty");
+        }
+        if (!userDto.getUserType().equalsIgnoreCase("BORROWER") && !userDto.getUserType().equalsIgnoreCase("LENDER")) {
+            throw new IllegalArgumentException("Only BORROWER or LENDER accounts can be created");
+        }
+        if (userRepository.existsByUserName(userDto.getUserName())) {
+            throw new IllegalArgumentException(userDto.getUserName() + " already exist !! ");
+        }
+        if (userDto.getPassword().contains(" ")) {
+            throw new IllegalArgumentException("Password should not contains white space");
+        }
+        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
             throw new IllegalArgumentException("Password mis-match.");
+        }
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new IllegalArgumentException("Email already exist.");
         }
     }
 }

@@ -34,6 +34,8 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
     public void makePayment(TransactionPaymentDto transactionPaymentDto)
     {
 
+        validateTransactionPaymentRequest(transactionPaymentDto);
+
         User validBorrower =  validateBorrower(transactionPaymentDto);
         User validLender = validateLender(transactionPaymentDto);
 
@@ -59,6 +61,18 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         transacitionRepository.update(transaction);
 
 
+    }
+
+    private void validateTransactionPaymentRequest(TransactionPaymentDto transactionPaymentDto) {
+
+        if(transactionPaymentDto.getBorrowerUserName().isEmpty() && transactionPaymentDto.getLenderUserName().isEmpty())
+        {
+            throw new IllegalArgumentException("UserName should not be empty");
+        }
+        if(transactionPaymentDto.getAmount() < 10  )
+        {
+            throw  new IllegalArgumentException("Amount should be greater than Rs 10.");
+        }
     }
 
     private User validateLender(TransactionPaymentDto transactionPaymentDto) {
@@ -107,7 +121,7 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
         double principal = transaction.getAmount();
         double rate = transaction.getInterestRate() / 100.0;
 
-        double amountWithInterest = (principal * rate * time);
+        double amountWithInterest = (principal * rate * time)/100;
 
         return amountWithInterest + principal;
 

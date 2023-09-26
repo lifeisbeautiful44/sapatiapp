@@ -20,7 +20,6 @@ public class LoginResource {
         this.loginService = loginService;
     }
 
-
     @Post("/login")
     public HttpResponse<ApiResponse> login(@Body LoginDto loginRequest) {
         ApiResponse apiResponse = loginService.login(loginRequest);

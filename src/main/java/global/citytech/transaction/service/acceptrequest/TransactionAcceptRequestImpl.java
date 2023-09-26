@@ -30,6 +30,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Override
     public ApiResponse acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
 
+        validateAcceptTransactionRequest(acceptTransaction);
         //for lender
         User validateLender = validateLender(acceptTransaction);
         //for borrower
@@ -61,6 +62,19 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
         } else {
             throw new IllegalArgumentException("No Request has made to  accept the transaction" );
         }
+    }
+
+    private void validateAcceptTransactionRequest(TransactionAcceptDto acceptTransactionRequest) {
+        System.out.println("acceptTransactionRequest.getInterestRate()\\ = " + acceptTransactionRequest.getInterestRate());
+
+    if(acceptTransactionRequest.getLenderUserName().isEmpty() || acceptTransactionRequest.getBorrowerUserName().isEmpty() || acceptTransactionRequest.getInterestRate().isNaN())
+    {
+        throw new IllegalArgumentException("All the fields are mandatory");
+    }
+    if(acceptTransactionRequest.getInterestRate() < 0)
+    {
+        throw new IllegalArgumentException("Interest Rate should be greater than Zero.");
+    }
     }
 
     private User validateLender(TransactionAcceptDto transactionAcceptDto) {
