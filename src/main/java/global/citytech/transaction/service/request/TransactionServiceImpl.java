@@ -45,7 +45,6 @@ public class TransactionServiceImpl implements TransactionService {
         transactionResponse.setAmount(requestMade.getAmount());
         transactionResponse.setStatus(requestMade.getStatus());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(requestMade.getRequestDate());
         transactionResponse.setRequestDate(offsetDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a")));
 

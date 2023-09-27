@@ -1,4 +1,4 @@
-package global.citytech.cashflow.service;
+package global.citytech.cashflow.service.dto;
 
 
 import io.micronaut.core.annotation.Introspected;

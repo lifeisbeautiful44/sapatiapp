@@ -1,7 +1,8 @@
 package global.citytech.user.controller;
 
 
-import global.citytech.cashflow.service.CashDto;
+import global.citytech.cashflow.service.cashflow.LoadBalanceResponse;
+import global.citytech.cashflow.service.dto.CashDto;
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryDto;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryListService;
@@ -35,7 +36,7 @@ public class UserResource {
     }
     @Post("/register")
     public HttpResponse<ApiResponse<UserReponseInfo>> registerUser(@Body CreateUserDto userDto) {
-        ApiResponse registerUser = addUserService.registerUser(userDto);
+        ApiResponse<UserReponseInfo> registerUser = addUserService.registerUser(userDto);
         return HttpResponse.ok().body(registerUser);
     }
 
@@ -45,10 +46,12 @@ public class UserResource {
         return HttpResponse.ok().body(userStatusUpdated);
     }
     @Post("/loadBalance")
-    public String loadBalance(@Body CashDto cashDto)
+    public HttpResponse<ApiResponse<LoadBalanceResponse>> loadBalance(@Body CashDto cashDto)
     {
-       String message =  cashFlowSevice.loadBalance(cashDto);
-       return  message;
+       ApiResponse<LoadBalanceResponse> loadBalanceResponse =  cashFlowSevice.loadBalance(cashDto);
+
+       return  HttpResponse.ok().body(loadBalanceResponse);
+
     }
 
     @Post("/list")

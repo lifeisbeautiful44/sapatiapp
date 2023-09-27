@@ -2,10 +2,11 @@ package global.citytech.cashflow.service.cashflow;
 
 import global.citytech.cashflow.repository.CashFlow;
 import global.citytech.cashflow.repository.CashFlowRepository;
-import global.citytech.cashflow.service.CashDto;
+import global.citytech.cashflow.service.dto.CashDto;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
+import global.citytech.user.service.adaptor.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
@@ -56,7 +57,7 @@ public class CashFlowServiceImpl implements CashFlowSevice {
         cashFlowRepository.update(lenderCashInformation);
     }
 
-    public String loadBalance(CashDto cashDto) {
+    public ApiResponse<LoadBalanceResponse> loadBalance(CashDto cashDto) {
         // CashFlow depoistCash = new CashFlow();
         User userName = userRepository.findByUserName(cashDto.getUserName()).orElseThrow(() ->
         {
@@ -73,13 +74,21 @@ public class CashFlowServiceImpl implements CashFlowSevice {
         if (userType.equals("BORROWER")) {
             checkAmountLimit(cashDto);
             depoistCash.setCashAmount(cashDto.getAmount() + depoistCash.getCashAmount());
-            cashFlowRepository.update(depoistCash);
-            return "amount has been successfully updated";
+           CashFlow updatedBorrowerBalance =  cashFlowRepository.update(depoistCash);
+
+           LoadBalanceResponse loadBalanceResponse = new LoadBalanceResponse();
+           loadBalanceResponse.setUserName(cashDto.getUserName());
+           loadBalanceResponse.setAmount(updatedBorrowerBalance.getCashAmount());
+            return new ApiResponse<>(200, "success",loadBalanceResponse);
         } else {
             checkAmountLimit(cashDto);
             depoistCash.setCashAmount(cashDto.getAmount() + depoistCash.getCashAmount());
-            cashFlowRepository.update(depoistCash);
-            return "amount has been successfully updated";
+
+           CashFlow updatedLenderBalance =  cashFlowRepository.update(depoistCash);
+            LoadBalanceResponse loadBalanceResponse = new LoadBalanceResponse();
+            loadBalanceResponse.setUserName(cashDto.getUserName());
+            loadBalanceResponse.setAmount(updatedLenderBalance.getCashAmount());
+            return new ApiResponse<>(200, "success",loadBalanceResponse);
         }
     }
 

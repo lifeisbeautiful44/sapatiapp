@@ -4,5 +4,5 @@ import global.citytech.transaction.service.adapter.TransactionAcceptDto;
 import global.citytech.user.service.adaptor.ApiResponse;
 
 public interface TransactionAcceptRequest {
-    ApiResponse<?> acceptTransactionRequest(TransactionAcceptDto acceptTransaction);
+    ApiResponse<TransactionAcceptResponse> acceptTransactionRequest(TransactionAcceptDto acceptTransaction);
 }

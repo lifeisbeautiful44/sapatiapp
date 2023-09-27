@@ -16,7 +16,7 @@ public class AddUserServiceImpl implements AddUserService {
     }
 
     @Override
-    public ApiResponse<?> registerUser(CreateUserDto userDto) {
+    public ApiResponse<UserReponseInfo> registerUser(CreateUserDto userDto) {
         validateUserRequest(userDto);
         User user = Mapper.mapUserDtoToUserEntity(userDto);
         User registeredUser = userRepository.save(user);

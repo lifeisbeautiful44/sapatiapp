@@ -2,6 +2,7 @@ package global.citytech.lender.controller;
 
 
 import global.citytech.transaction.service.acceptrequest.TransactionAcceptRequest;
+import global.citytech.transaction.service.acceptrequest.TransactionAcceptResponse;
 import global.citytech.transaction.service.adapter.TransactionAcceptDto;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryDto;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryListService;
@@ -21,13 +22,13 @@ public class LenderController {
     @Inject
     TransactionHistoryListService transactionHistoryList;
     @Put("/accept-money-request")
-    public HttpResponse<ApiResponse> acceptTransactionRequest(@Body  TransactionAcceptDto acceptDto) {
-        try {
-            ApiResponse apiResponse = transactionAcceptRequest.acceptTransactionRequest(acceptDto);
-            return HttpResponse.ok().body(apiResponse);
-        } catch (IllegalArgumentException e) {
-            return HttpResponse.badRequest().body(new ApiResponse<>(400, "failed", e.getMessage()));
-        }
+    public HttpResponse<ApiResponse<TransactionAcceptResponse>> acceptTransactionRequest(@Body  TransactionAcceptDto acceptDto) {
+       // try {
+            ApiResponse acceptedTransactionRequest = transactionAcceptRequest.acceptTransactionRequest(acceptDto);
+            return HttpResponse.ok().body(acceptedTransactionRequest);
+//        } catch (IllegalArgumentException e) {
+//            return HttpResponse.badRequest().body(new ApiResponse<>(400, "failed", e.getMessage()));
+//        }
 
     }
 

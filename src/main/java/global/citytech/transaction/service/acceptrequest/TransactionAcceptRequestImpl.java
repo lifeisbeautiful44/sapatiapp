@@ -12,6 +12,8 @@ import global.citytech.user.service.adaptor.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Inject
@@ -28,7 +30,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
 
 
     @Override
-    public ApiResponse acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
+    public ApiResponse<TransactionAcceptResponse> acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
 
         validateAcceptTransactionRequest(acceptTransaction);
         //for lender
@@ -57,7 +59,20 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
             // Updating the transaction history
             transactionHistoryService.updateTransactionAccepted(acceptedTransaction);
 
-            return new ApiResponse<>(200, "Money request Accepted", pendingTransaction);
+            TransactionAcceptResponse transactionAcceptResponse = new TransactionAcceptResponse();
+            transactionAcceptResponse.setBorrowerUserName(validateBorrower.getUserName());
+            transactionAcceptResponse.setLenderUserName(validateLender.getUserName());
+            transactionAcceptResponse.setStatus(pendingTransaction.getStatus());
+            OffsetDateTime offSetRequestDate = OffsetDateTime.parse(pendingTransaction.getRequestDate());
+            transactionAcceptResponse.setRequestedDate(offSetRequestDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a")));
+
+            transactionAcceptResponse.setInterestRate(pendingTransaction.getInterestRate());
+
+            OffsetDateTime offSetAccepetedPaymentDate = OffsetDateTime.parse(pendingTransaction.getRequestDate());
+            transactionAcceptResponse.setPaymentAcceptedDate(offSetAccepetedPaymentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a")));
+
+
+            return new ApiResponse<>(200, "Money request Accepted", transactionAcceptResponse);
 
         } else {
             throw new IllegalArgumentException("No Request has made to  accept the transaction" );
