@@ -1,5 +1,6 @@
 package global.citytech.transactionhistory.service.transactionhistorylist;
 
+import global.citytech.exception.CustomResponseException;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transactionhistory.repository.TransactionHistory;
@@ -64,21 +65,21 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
             return new ApiResponse<>(200, "No transaction history", response);
         }
     }
-
     private void validateTransactionHistory(TransactionHistoryDto transactionHistory) {
 
         if (transactionHistory.getUserName().isEmpty()) {
-            throw new IllegalArgumentException("Username should not be empty.");
+            throw new CustomResponseException(400, "bad request", "No Pending transaction to  accept the request.");
         }
 
     }
 
-
     private User getUserByUsernameOrThrow(String username) {
         User user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new IllegalArgumentException("No such User exists."));
+                .orElseThrow(() ->
+                        { throw new CustomResponseException(400, "bad request", "No such User exists.");}
+                );
         if (!user.getStatus()) {
-            throw new IllegalArgumentException("User is not verified");
+            throw new CustomResponseException(400, "bad request", "User is not verified.");
         }
         return user;
     }

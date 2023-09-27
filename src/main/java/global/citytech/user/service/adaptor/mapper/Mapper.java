@@ -1,5 +1,6 @@
 package global.citytech.user.service.adaptor.mapper;
 
+import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.user.repository.User;
 import global.citytech.user.service.adaptor.dto.CreateUserDto;
 import global.citytech.user.service.adduser.UserReponseInfo;
@@ -43,4 +44,6 @@ public class Mapper {
         addUserRequestInfo.setUserType(user.getUserName());
         return addUserRequestInfo;
     }
+
+
 }

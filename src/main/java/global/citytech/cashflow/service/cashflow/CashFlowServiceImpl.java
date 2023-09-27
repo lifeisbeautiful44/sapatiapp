@@ -3,6 +3,7 @@ package global.citytech.cashflow.service.cashflow;
 import global.citytech.cashflow.repository.CashFlow;
 import global.citytech.cashflow.repository.CashFlowRepository;
 import global.citytech.cashflow.service.dto.CashDto;
+import global.citytech.exception.CustomResponseException;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
@@ -61,11 +62,10 @@ public class CashFlowServiceImpl implements CashFlowSevice {
         // CashFlow depoistCash = new CashFlow();
         User userName = userRepository.findByUserName(cashDto.getUserName()).orElseThrow(() ->
         {
-            throw new IllegalArgumentException("User not found");
+            throw new CustomResponseException(400, "bad request", "User not found");
         });
-
         if (!userName.getStatus()) {
-            throw new IllegalArgumentException("Only verified user can load balance.");
+            throw new CustomResponseException(400, "bad request", "Only verified user can load balance.");
         }
         //In case further validation
         //Optional<CashFlow> depoistCash =  cashFlowRepository.findById(userName.getId());
@@ -94,7 +94,7 @@ public class CashFlowServiceImpl implements CashFlowSevice {
 
     private void checkAmountLimit(CashDto cashDto) {
         if (cashDto.getAmount() >= 50000) {
-            throw new IllegalArgumentException("Transaction limit is only 50000");
+            throw new CustomResponseException(400, "bad request", "Transaction limit is only 50000.");
         }
 
     }

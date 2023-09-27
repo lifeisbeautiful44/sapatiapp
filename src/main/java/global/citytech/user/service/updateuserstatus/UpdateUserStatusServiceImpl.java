@@ -2,6 +2,7 @@ package global.citytech.user.service.updateuserstatus;
 
 
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
+import global.citytech.exception.CustomResponseException;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
@@ -11,7 +12,8 @@ public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {
     @Inject
     private CashFlowSevice newVerifiedUserCashTable;
     @Inject
-   private  UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Override
     public ApiResponse<String> updateUserStatus(UserStatusDto userStatusDto) {
         User updateUserStatus = validateUserStatus(userStatusDto);
@@ -25,16 +27,15 @@ public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {
 
     private User validateUserStatus(UserStatusDto userStatus) {
 
-        if(userStatus.getUserName().isEmpty())
-        {
-            throw new IllegalArgumentException("UserName is not provided.");
+        if (userStatus.getUserName().isEmpty()) {
+            throw new CustomResponseException(400, "bad request", "UserName is not provided.");
         }
         User user = userRepository.findByUserName(userStatus.getUserName()).orElseThrow(
-                () -> new IllegalArgumentException("The provided user doesnot exist")
+                () ->
+                {throw new CustomResponseException(400, "bad request", "The provided user doesn't exist.");}
         );
-        if(user.getStatus() == true)
-        {
-            throw new IllegalArgumentException("The user status is already verified.");
+        if (user.getStatus() == true) {
+            throw new CustomResponseException(400, "bad request", "The user status is already verified.");
         }
         return user;
     }

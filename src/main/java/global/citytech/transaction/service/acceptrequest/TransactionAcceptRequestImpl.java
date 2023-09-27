@@ -2,6 +2,7 @@ package global.citytech.transaction.service.acceptrequest;
 
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
 import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
+import global.citytech.exception.CustomResponseException;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
@@ -43,7 +44,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
             Transaction pendingTransaction = transacitonRepository.findByLenderIdAndBorrowerIdAndStatus(validateLender.getId(), validateBorrower.getId(), "PENDING")
                     .orElseThrow(
                             () -> {
-                                throw new IllegalArgumentException("No Pending transaction to  accept the request");
+                                throw new CustomResponseException(400, "bad request", "No Pending transaction to  accept the request.");
                             }
                     );
             //if the lender has sufficient amount or not
@@ -75,7 +76,8 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
             return new ApiResponse<>(200, "Money request Accepted", transactionAcceptResponse);
 
         } else {
-            throw new IllegalArgumentException("No Request has made to  accept the transaction" );
+            throw new CustomResponseException(400, "bad request", "No Request has made to  accept the transaction.");
+
         }
     }
 
@@ -84,11 +86,11 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
 
     if(acceptTransactionRequest.getLenderUserName().isEmpty() || acceptTransactionRequest.getBorrowerUserName().isEmpty() || acceptTransactionRequest.getInterestRate().isNaN())
     {
-        throw new IllegalArgumentException("All the fields are mandatory");
+        throw new CustomResponseException(400, "bad request", "All the fields are mandatory.");
     }
     if(acceptTransactionRequest.getInterestRate() < 0)
     {
-        throw new IllegalArgumentException("Interest Rate should be greater than Zero.");
+        throw new CustomResponseException(400, "bad request", "Interest Rate should be greater than Zero.");
     }
     }
     private User validateLender(TransactionAcceptDto transactionAcceptDto) {
@@ -96,15 +98,16 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
 
         User userExist = userRepository.findByUserName(lenderUserName).orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException("No user found");
+                    throw new CustomResponseException(400, "bad request", "No user found.");
+
                 }
         );
         if (userExist.getStatus() == false) {
-            throw new IllegalArgumentException(userExist.getFirstName() + " is not verified too make the money request");
+            throw new CustomResponseException(400, "bad request", userExist.getFirstName() + " is not verified too make the money request");
         }
         return userRepository.findByUserNameAndUserType(lenderUserName, "LENDER").orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException(lenderUserName + " doesn't exist of type: LENDER");
+                    throw new CustomResponseException(400, "bad request", lenderUserName + " doesn't exist of type: LENDER");
                 }
         );
     }
@@ -113,17 +116,17 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
 
         User userExist = userRepository.findByUserName(borrowerUserName).orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException("No user found");
+                    throw new CustomResponseException(400, "bad request", "No user found");
                 }
         );
 
         if (userExist.getStatus() ==false ) {
-            throw new IllegalArgumentException(userExist.getFirstName() + " is not verified too make the money request");
+            throw new CustomResponseException(400, "bad request", userExist.getFirstName() + " is not verified too make the money request");
         }
 
         return userRepository.findByUserNameAndUserType(borrowerUserName, "BORROWER").orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException(borrowerUserName + " doesn't exist of type: BORROWER");
+                    throw new CustomResponseException(400, "bad request", borrowerUserName + " doesn't exist of type: BORROWER");
                 }
         );
 

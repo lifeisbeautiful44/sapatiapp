@@ -8,8 +8,6 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 public class  TransactionHistoryResponse  {
 
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
     private String lenderUsername;
     @JsonInclude(JsonInclude.Include.NON_NULL)

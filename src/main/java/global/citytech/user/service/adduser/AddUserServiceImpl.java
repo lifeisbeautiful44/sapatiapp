@@ -1,5 +1,6 @@
 package global.citytech.user.service.adduser;
 
+import global.citytech.exception.CustomResponseException;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
@@ -27,25 +28,29 @@ public class AddUserServiceImpl implements AddUserService {
 
     private void validateUserRequest(CreateUserDto userDto) {
         if (userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getUserType().isEmpty() || userDto.getPassword().isEmpty() || userDto.getConfirmPassword().isEmpty() || userDto.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("All the field are mandatory ");
+            throw new CustomResponseException(400, "bad request", "All the field are mandatory.");
         }
         if (userDto.getFirstName().contains(" ") || userDto.getLastName().contains(" ") || userDto.getUserType().contains(" ") || userDto.getEmail().contains(" ")) {
-            throw new IllegalArgumentException("Fields should not be empty");
+            throw new CustomResponseException(400, "bad request", "Fields should not be empty.");
+
         }
         if (!userDto.getUserType().equalsIgnoreCase("BORROWER") && !userDto.getUserType().equalsIgnoreCase("LENDER")) {
-            throw new IllegalArgumentException("Only BORROWER or LENDER accounts can be created");
+            throw new CustomResponseException(400, "bad request", "Only BORROWER or LENDER accounts can be created.");
+
         }
         if (userRepository.existsByUserName(userDto.getUserName())) {
-            throw new IllegalArgumentException(userDto.getUserName() + " already exist !! ");
+            throw new CustomResponseException(400, "bad request", userDto.getUserName() + " already exist !! ");
         }
         if (userDto.getPassword().contains(" ")) {
-            throw new IllegalArgumentException("Password should not contains white space");
+            throw new CustomResponseException(400, "bad request", "Password should not contains white space.");
+
         }
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new IllegalArgumentException("Password mis-match.");
+            throw new CustomResponseException(400, "bad request", "Password mis-match.");
+
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new IllegalArgumentException("Email already exist.");
+            throw new CustomResponseException(400, "bad request", "Email already exist.");
         }
     }
 }

@@ -1,6 +1,7 @@
 package global.citytech.auth.service;
 
 import global.citytech.auth.service.adaptor.dto.LoginDto;
+import global.citytech.exception.CustomResponseException;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
@@ -25,25 +26,25 @@ public class LoginServiceImpl implements LoginService {
                     return new ApiResponse<>(200, userExists.getUserName() + " has been successfully login. ", "Account Type: " + userExists.getUserType());
 
                 } else {
-                    throw new IllegalArgumentException("password doesnot match.");
+                    throw new CustomResponseException(400, "bad request","password doesnot match.");
                 }
             } else {
-                throw new IllegalArgumentException("User not found");
+                throw new CustomResponseException(400, "bad request","User not found");
             }
         }
    private void  validateLoginRequest(LoginDto loginRequest)
     {
         if(loginRequest.getUserName().isEmpty())
         {
-            throw new IllegalArgumentException("empty username field.");
+            throw new CustomResponseException(400, "bad request","empty username field.");
         }
         if(loginRequest.getPassword().isEmpty())
         {
-            throw new IllegalArgumentException("empty password field.");
+            throw new CustomResponseException(400, "bad request", "empty password field.");
         }
         if(loginRequest.getPassword().contains(" "))
         {
-            throw new IllegalArgumentException("password contains white spaces");
+            throw new CustomResponseException(400, "bad request", "password contains white spaces.");
         }
     }
 }

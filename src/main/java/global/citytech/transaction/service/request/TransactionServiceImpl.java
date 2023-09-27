@@ -1,5 +1,6 @@
 package global.citytech.transaction.service.request;
 
+import global.citytech.exception.CustomResponseException;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
@@ -58,14 +59,15 @@ public class TransactionServiceImpl implements TransactionService {
 
         if(transactionDto.getBorrowerUserName().isEmpty() || transactionDto.getLenderUserName().isEmpty()   )
         {
-            throw new IllegalArgumentException("All the fields are mandatory");
+            throw new CustomResponseException(400, "bad request", "All the fields are mandatory.");
         }
         if(transactionDto.getAmount() < 10)
         {
-            throw new IllegalArgumentException("Amount should be greater than Rs 10..");
+            throw new CustomResponseException(400, "bad request", "Amount should be greater than Rs 10..");
+
         }
         if (transactionDto.getEstimatedReturnTime() < 1 || transactionDto.getEstimatedReturnTime() >= 30) {
-            throw new IllegalArgumentException("Invalid estimated day");
+            throw new CustomResponseException(400, "bad request", "Invalid estimated day.");
         }
     }
 
@@ -75,7 +77,8 @@ public class TransactionServiceImpl implements TransactionService {
         String lenderUserName = transactionDto.getLenderUserName();
         User userExist = userRepository.findByUserName(lenderUserName).orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException("No user found");
+                    throw new CustomResponseException(400, "bad request", "No user found.");
+
                 }
         );
         if (userExist.getStatus() == false) {
@@ -84,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         return userRepository.findByUserNameAndUserType(lenderUserName, "LENDER").orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException(lenderUserName + " doesnot exist as  LENDER");
+                    throw new CustomResponseException(400, "bad request", lenderUserName +  "+ doesnot exist as  LENDER.");
                 }
         );
     }
@@ -94,37 +97,38 @@ public class TransactionServiceImpl implements TransactionService {
 
         User userExist = userRepository.findByUserName(borrowerUserName).orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException("No user found");
+                    throw new CustomResponseException(400, "bad request", "No user found.");
                 }
         );
 
         if (userExist.getStatus() == false) {
-            throw new IllegalArgumentException(userExist.getFirstName() + " ->  type [BORROWER] " + " is not verified too make the money request");
+            throw new CustomResponseException(400, "bad request", " ->  type [BORROWER]  is not verified too make the money request");
+
         }
         return userRepository.findByUserNameAndUserType(borrowerUserName, "BORROWER").orElseThrow(
                 () -> {
-                    throw new IllegalArgumentException(borrowerUserName + " doesnot exist as BORROWER");
+                    throw new CustomResponseException(400, "bad request", "doesnot exist as BORROWER.");
+
                 }
         );
 
     }
 
     private void checkPreviousTransactionExists(Long lenderId, Long borrowerId) {
-
         //The same user can have only one pending request with the lender
         Optional<Transaction> user = transacitonRepository.findByLenderIdAndBorrowerIdAndStatus(lenderId, borrowerId, "PENDING");
         System.out.println(user);
 
         if (user.isPresent()) {
-            throw new IllegalArgumentException("You already have pending transaction, transaction failed..");
+            throw new CustomResponseException(400, "bad request", "You already have pending transaction with the same user, transaction failed...");
         }
-
         //if the previous transaction is there then you should
         List<TransactionHistory> previousUnPaidTransaction = transactionHistoryRepository.findByBorrowerIdAndPaymentStatus(borrowerId,"UNPAID");
 
         if(!previousUnPaidTransaction.isEmpty())
         {
-            throw new IllegalArgumentException("You have previous UNPAID transaction.");
+            throw new CustomResponseException(400, "bad request", "You have previous UNPAID transaction..");
+
         }
     }
 

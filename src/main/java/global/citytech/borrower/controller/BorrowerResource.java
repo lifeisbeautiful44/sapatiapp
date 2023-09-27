@@ -31,18 +31,13 @@ public class BorrowerResource {
     }
     @Post("/request-money")
     public HttpResponse<ApiResponse<TransactionResponse>> requestMoney(@Body TransactionRequestDto transactionDto) {
-       // try {
             ApiResponse<TransactionResponse> requestMade = transactionService.requestMoney(transactionDto);
             return HttpResponse.ok().body(requestMade);
-//        } catch (IllegalArgumentException e) {
-//            return HttpResponse.badRequest().body(new ApiResponse<TransactionResponse>(400, "Failed", e.getMessage()));
-//        }
     }
     @Put("/return/money")
     public  HttpResponse<ApiResponse<TransactionPaymentBackResponse>> returnPayment(@Body  TransactionPaymentDto transactionPaymentDto)
     {
       ApiResponse<TransactionPaymentBackResponse> paymentBackResponse =  transactionPaymentService.makePayment(transactionPaymentDto);
-
       return HttpResponse.ok().body(paymentBackResponse);
     }
 
