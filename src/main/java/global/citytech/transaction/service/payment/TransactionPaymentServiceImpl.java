@@ -10,6 +10,7 @@ import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionPaymentDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
+import global.citytech.user.service.adaptor.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
 
     @Inject
     private TransacitionRepository transacitionRepository;
-    public void makePayment(TransactionPaymentDto transactionPaymentDto)
+    public ApiResponse<TransactionPaymentBackResponse> makePayment(TransactionPaymentDto transactionPaymentDto)
     {
 
         validateTransactionPaymentRequest(transactionPaymentDto);
@@ -58,8 +59,16 @@ public class TransactionPaymentServiceImpl implements TransactionPaymentService 
 
         //update the transaction with amount that has been paid.
         transaction.setAmountWithInterest(interestAmount(transaction));
-        transacitionRepository.update(transaction);
+        Transaction successfulTransaction = transacitionRepository.update(transaction);
 
+        // making response
+        TransactionPaymentBackResponse paymentBackResponse =  new TransactionPaymentBackResponse();
+        paymentBackResponse.setBorrowerName(validBorrower.getUserName());
+        paymentBackResponse.setLenderName(validLender.getUserName());
+        paymentBackResponse.setAmount(successfulTransaction.getAmount());
+        paymentBackResponse.setPaidBackAmmount(successfulTransaction.getAmountWithInterest());
+
+        return new ApiResponse<>(200,"success",paymentBackResponse);
 
     }
 

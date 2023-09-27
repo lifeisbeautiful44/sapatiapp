@@ -5,7 +5,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected
 @Serdeable
-public class TransactionDto {
+public class TransactionRequestDto {
 
     private Double amount;
 
@@ -16,10 +16,10 @@ public class TransactionDto {
     private String lenderUserName;
 
 
-    public TransactionDto() {
+    public TransactionRequestDto() {
     }
 
-    public TransactionDto(Double amount, long estimatedReturnTime, String borrowerUserName, String lenderUserName) {
+    public TransactionRequestDto(Double amount, long estimatedReturnTime, String borrowerUserName, String lenderUserName) {
         this.amount = amount;
         this.estimatedReturnTime = estimatedReturnTime;
         this.borrowerUserName = borrowerUserName;

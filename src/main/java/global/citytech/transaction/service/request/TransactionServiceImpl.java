@@ -5,13 +5,15 @@ import global.citytech.transactionhistory.repository.TransactionHistoryRepositor
 import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
-import global.citytech.transaction.service.adapter.TransactionDto;
+import global.citytech.transaction.service.adapter.TransactionRequestDto;
 import global.citytech.transaction.service.adapter.mapper.Mapper;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.ApiResponse;
 import jakarta.inject.Inject;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionHistoryRepository transactionHistoryRepository;
 
     @Override
-    public ApiResponse<?> requestMoney(TransactionDto transactionDto) {
+    public ApiResponse<TransactionResponse> requestMoney(TransactionRequestDto transactionDto) {
 
         validateTransactionDtoRequest(transactionDto);
         User validBorrower = validateBorrower(transactionDto);
@@ -36,13 +38,24 @@ public class TransactionServiceImpl implements TransactionService {
         checkPreviousTransactionExists(validLender.getId(), validBorrower.getId());
         Transaction mappedTransaction = Mapper.MapTransactionDtoToEntity(transactionDto, validLender.getId(), validBorrower.getId());
         Transaction requestMade = transacitonRepository.save(mappedTransaction);
+
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setBorrowerName(validBorrower.getUserName());
+        transactionResponse.setLenderName(validLender.getUserName());
+        transactionResponse.setAmount(requestMade.getAmount());
+        transactionResponse.setStatus(requestMade.getStatus());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(requestMade.getRequestDate());
+        transactionResponse.setRequestDate(offsetDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a")));
+
         // created Transaction History
-        System.out.println("Transacition History Created with REQUEST_On_HOLD");
+        System.out.println("Transaction History Created with REQUEST_On_HOLD");
         transactionHistoryService.create(requestMade);
-        return new ApiResponse<>(200, "Money request has made successfully", requestMade);
+        return new ApiResponse<>(200, "Money request has made successfully", transactionResponse);
     }
 
-    private void validateTransactionDtoRequest(TransactionDto transactionDto) {
+    private void validateTransactionDtoRequest(TransactionRequestDto transactionDto) {
 
         if(transactionDto.getBorrowerUserName().isEmpty() || transactionDto.getLenderUserName().isEmpty()   )
         {
@@ -58,7 +71,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-    private User validateLender(TransactionDto transactionDto) {
+    private User validateLender(TransactionRequestDto transactionDto) {
 
         String lenderUserName = transactionDto.getLenderUserName();
         User userExist = userRepository.findByUserName(lenderUserName).orElseThrow(
@@ -77,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
         );
     }
 
-    private User validateBorrower(TransactionDto transactionDto) {
+    private User validateBorrower(TransactionRequestDto transactionDto) {
         String borrowerUserName = transactionDto.getBorrowerUserName();
 
         User userExist = userRepository.findByUserName(borrowerUserName).orElseThrow(

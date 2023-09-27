@@ -17,7 +17,7 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     @Inject
     UserRepository userRepository;
     @Inject
-    TransacitionRepository transacitonRepository;
+    TransacitionRepository transactionRepository;
     @Inject
     TransactionHistoryRepository transactionHistoryRepository;
 
@@ -33,11 +33,10 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
             if (borrowerTransactionHistoryList.isEmpty()) {
                 return new ApiResponse<>(200, "No transaction history", response);
             }
-
             for (TransactionHistory borrowerTransactionHistory : borrowerTransactionHistoryList) {
                 Optional<User> lenderUser = userRepository.findById(borrowerTransactionHistory.getLenderId());
                 Optional<User> borrowerUser = userRepository.findById(borrowerTransactionHistory.getBorrowerId());
-                Transaction transaction = transacitonRepository.findByIdAndLenderIdAndBorrowerId(borrowerTransactionHistory.getTransactionId(), lenderUser.get().getId(), borrowerUser.get().getId()).get();
+                Transaction transaction = transactionRepository.findByIdAndLenderIdAndBorrowerId(borrowerTransactionHistory.getTransactionId(), lenderUser.get().getId(), borrowerUser.get().getId()).get();
                 TransactionHistoryResponse transactionHistoryResponse = new TransactionHistoryResponse();
                 transactionHistoryResponse.setLenderUsername(lenderUser.get().getUserName());
                 transactionHistoryResponse.setTransactionStatus(borrowerTransactionHistory.getTransactionStatus());
@@ -54,7 +53,7 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
             for (TransactionHistory lenderTransactionHistory : lenderTransactionHistoryList) {
                 Optional<User> lenderUser = userRepository.findById(lenderTransactionHistory.getLenderId());
                 Optional<User> borrowerUser = userRepository.findById(lenderTransactionHistory.getBorrowerId());
-                Transaction transaction = transacitonRepository.findByIdAndLenderIdAndBorrowerId(lenderTransactionHistory.getTransactionId(), lenderUser.get().getId(), borrowerUser.get().getId()).get();
+                Transaction transaction = transactionRepository.findByIdAndLenderIdAndBorrowerId(lenderTransactionHistory.getTransactionId(), lenderUser.get().getId(), borrowerUser.get().getId()).get();
                 TransactionHistoryResponse transactionHistoryResponse = new TransactionHistoryResponse();
                 transactionHistoryResponse.setBorrowerUserName(borrowerUser.get().getUserName());
                 transactionHistoryResponse.setTransactionStatus(lenderTransactionHistory.getTransactionStatus());
