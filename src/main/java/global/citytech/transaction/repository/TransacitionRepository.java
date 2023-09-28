@@ -16,4 +16,6 @@ public interface TransacitionRepository extends CrudRepository<Transaction, Long
 /*  Using optional , because one lender can request with one borrower  */
     Optional<Transaction> findByLenderIdAndBorrowerIdAndStatus(long lenderId, long borrowerId,String status);
     Optional<Transaction> findByIdAndLenderIdAndBorrowerId(long id, long lenderId, long borrowerId);
+
+
 }

@@ -1,9 +1,9 @@
 package global.citytech.user.service.adaptor.mapper;
 
-import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.user.repository.User;
 import global.citytech.user.service.adaptor.dto.CreateUserDto;
 import global.citytech.user.service.adduser.UserReponseInfo;
+
 public class Mapper {
     public static CreateUserDto mapUserEntityToDto(User savedUser) {
         CreateUserDto userDto = new CreateUserDto();
@@ -21,6 +21,7 @@ public class Mapper {
         return userDto;
 
     }
+
     public static User mapUserDtoToUserEntity(CreateUserDto userDto) {
 
         User user = new User();
@@ -32,16 +33,18 @@ public class Mapper {
         user.setConfirmPassword(userDto.getConfirmPassword());
         user.setUserType(userDto.getUserType().toUpperCase());
         user.setStatus(false);
+        user.setBlackListed(false);
         user.setCreatedAt(userDto.getCreatedAt());
 
         return user;
     }
+
     public static UserReponseInfo userReponseInfo(User user) {
         UserReponseInfo addUserRequestInfo = new UserReponseInfo();
         addUserRequestInfo.setFirstName(user.getFirstName());
         addUserRequestInfo.setLastName(user.getLastName());
+        addUserRequestInfo.setUserName(user.getUserName());
         addUserRequestInfo.setUserType(user.getUserType());
-        addUserRequestInfo.setUserType(user.getUserName());
         return addUserRequestInfo;
     }
 

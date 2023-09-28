@@ -2,10 +2,10 @@ package global.citytech.user.service.updateuserstatus;
 
 
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {

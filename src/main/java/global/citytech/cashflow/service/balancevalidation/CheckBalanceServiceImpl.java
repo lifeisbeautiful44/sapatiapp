@@ -2,7 +2,7 @@ package global.citytech.cashflow.service.balancevalidation;
 
 import global.citytech.cashflow.repository.CashFlow;
 import global.citytech.cashflow.repository.CashFlowRepository;
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;

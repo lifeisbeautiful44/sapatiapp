@@ -1,6 +1,6 @@
 package global.citytech.transactionhistory.service.transactionhistorylist;
 
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 
 import java.util.List;
 

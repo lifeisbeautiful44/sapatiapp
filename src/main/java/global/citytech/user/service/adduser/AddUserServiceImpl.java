@@ -1,12 +1,14 @@
 package global.citytech.user.service.adduser;
 
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import global.citytech.user.service.adaptor.dto.CreateUserDto;
 import global.citytech.user.service.adaptor.mapper.Mapper;
 import jakarta.inject.Inject;
+
+import java.util.Optional;
 
 public class AddUserServiceImpl implements AddUserService {
     @Inject
@@ -53,6 +55,10 @@ public class AddUserServiceImpl implements AddUserService {
             throw new CustomResponseException(400, "bad request", "Email already exist.");
         }
     }
+
+
+
+
 }
 
 

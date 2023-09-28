@@ -27,8 +27,9 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     public void updateTransactionAccepted(Transaction transaction) {
 
         TransactionHistory transactionHistory = transactionHistoryRepository.findById(transaction.getId()).get();
-        transactionHistory.setTransactionStatus(transaction.getStatus());
-        transactionHistory.setPaymentStatus("UNPAID");
+        String status = transaction.getStatus();
+        transactionHistory.setTransactionStatus(status);
+        transactionHistory.setPaymentStatus(status.equals("REJECTED") ? "REJECTED" : "UNPAID");
         transactionHistoryRepository.update(transactionHistory);
     }
 

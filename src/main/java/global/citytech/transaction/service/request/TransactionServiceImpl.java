@@ -1,6 +1,7 @@
 package global.citytech.transaction.service.request;
 
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.BlackList;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
@@ -10,7 +11,7 @@ import global.citytech.transaction.service.adapter.TransactionRequestDto;
 import global.citytech.transaction.service.adapter.mapper.Mapper;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.time.OffsetDateTime;
@@ -30,9 +31,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Inject
     private TransactionHistoryRepository transactionHistoryRepository;
 
+    @Inject
+    private BlackList blackList;
+
     @Override
     public ApiResponse<TransactionResponse> requestMoney(TransactionRequestDto transactionDto) {
 
+        checkIfUserIsBlackListed(transactionDto);
         validateTransactionDtoRequest(transactionDto);
         User validBorrower = validateBorrower(transactionDto);
         User validLender = validateLender(transactionDto);
@@ -53,6 +58,15 @@ public class TransactionServiceImpl implements TransactionService {
         System.out.println("Transaction History Created with REQUEST_On_HOLD");
         transactionHistoryService.create(requestMade);
         return new ApiResponse<>(200, "Money request has made successfully", transactionResponse);
+    }
+
+    private void checkIfUserIsBlackListed(TransactionRequestDto transactionDto) {
+       String isUserBlacklisted =  transactionDto.getBorrowerUserName();
+       Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
+       if(user.isPresent())
+       {
+           blackList.isUserBlacklisted(user.get().getId());
+       }
     }
 
     private void validateTransactionDtoRequest(TransactionRequestDto transactionDto) {
@@ -122,10 +136,9 @@ public class TransactionServiceImpl implements TransactionService {
         if (user.isPresent()) {
             throw new CustomResponseException(400, "bad request", "You already have pending transaction with the same user, transaction failed...");
         }
-        //if the previous transaction is there then you should
-        List<TransactionHistory> previousUnPaidTransaction = transactionHistoryRepository.findByBorrowerIdAndPaymentStatus(borrowerId,"UNPAID");
-
-        if(!previousUnPaidTransaction.isEmpty())
+        //if the previous transaction is there then you should, if the borrower payment status is unpaid , then it cannot do request
+        Optional <TransactionHistory> previousUnPaidTransaction = transactionHistoryRepository.findByBorrowerIdAndPaymentStatus(borrowerId,"UNPAID");
+        if(previousUnPaidTransaction.isPresent())
         {
             throw new CustomResponseException(400, "bad request", "You have previous UNPAID transaction..");
 

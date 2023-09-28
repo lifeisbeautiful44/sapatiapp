@@ -3,7 +3,7 @@ package global.citytech.cashflow.service.cashflow;
 import global.citytech.cashflow.service.dto.CashDto;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.user.repository.User;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 
 public interface CashFlowSevice {
 

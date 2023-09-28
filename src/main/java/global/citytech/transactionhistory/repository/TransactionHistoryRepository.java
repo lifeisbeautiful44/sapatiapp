@@ -17,7 +17,7 @@ public interface TransactionHistoryRepository extends CrudRepository<Transaction
     Optional<TransactionHistory> findByLenderIdAndBorrowerIdWherePaymentStatus(long lenderId, long borrowerId, String paymentStatus);
     List<TransactionHistory> findByLenderId(Long lenderId);
     List<TransactionHistory> findByBorrowerId(Long borrowerId);
-    List<TransactionHistory> findByBorrowerIdAndPaymentStatus(long borrowerId, String paymentStatus);
+    Optional<TransactionHistory> findByBorrowerIdAndPaymentStatus(long borrowerId, String paymentStatus);
 
 
 }

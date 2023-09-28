@@ -7,17 +7,21 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 public class TransactionAcceptDto {
 
+
     private Double interestRate;
     private String borrowerUserName;
     private String lenderUserName;
 
+    private String status;
+
     public TransactionAcceptDto() {
     }
 
-    public TransactionAcceptDto(Double interestRate, String borrowerUserName, String lenderUserName) {
+    public TransactionAcceptDto(Double interestRate, String borrowerUserName, String lenderUserName, String status) {
         this.interestRate = interestRate;
         this.borrowerUserName = borrowerUserName;
         this.lenderUserName = lenderUserName;
+        this.status = status;
     }
 
     public Double getInterestRate() {
@@ -44,12 +48,21 @@ public class TransactionAcceptDto {
         this.lenderUserName = lenderUserName;
     }
 
+    public String getStatus() {
+        return status.toUpperCase();
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "TransactionAcceptDto{" +
                 "interestRate=" + interestRate +
                 ", borrowerUserName='" + borrowerUserName + '\'' +
                 ", lenderUserName='" + lenderUserName + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

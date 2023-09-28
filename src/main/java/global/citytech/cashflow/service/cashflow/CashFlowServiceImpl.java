@@ -3,11 +3,13 @@ package global.citytech.cashflow.service.cashflow;
 import global.citytech.cashflow.repository.CashFlow;
 import global.citytech.cashflow.repository.CashFlowRepository;
 import global.citytech.cashflow.service.dto.CashDto;
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.BlackList;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.Transaction;
+import global.citytech.transaction.service.adapter.TransactionRequestDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
@@ -17,6 +19,8 @@ public class CashFlowServiceImpl implements CashFlowSevice {
     private CashFlowRepository cashFlowRepository;
     @Inject
     private UserRepository userRepository;
+    @Inject
+    private BlackList blackList;
 
 
     /*saves the newly created user in CashInfo Table*/
@@ -59,6 +63,8 @@ public class CashFlowServiceImpl implements CashFlowSevice {
     }
 
     public ApiResponse<LoadBalanceResponse> loadBalance(CashDto cashDto) {
+
+        checkIfUserIsBlackListed(cashDto);
         // CashFlow depoistCash = new CashFlow();
         User userName = userRepository.findByUserName(cashDto.getUserName()).orElseThrow(() ->
         {
@@ -98,7 +104,14 @@ public class CashFlowServiceImpl implements CashFlowSevice {
         }
 
     }
-
+    private void checkIfUserIsBlackListed(CashDto cashDto) {
+        String isUserBlacklisted =  cashDto.getUserName();
+        Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
+        if(user.isPresent())
+        {
+            blackList.isUserBlacklisted(user.get().getId());
+        }
+    }
 
 
 

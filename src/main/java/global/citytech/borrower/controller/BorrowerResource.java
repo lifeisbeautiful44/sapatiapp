@@ -9,7 +9,7 @@ import global.citytech.transaction.service.request.TransactionResponse;
 import global.citytech.transaction.service.request.TransactionService;
 import global.citytech.transaction.service.adapter.TransactionRequestDto;
 import global.citytech.transaction.service.adapter.TransactionPaymentDto;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;

@@ -3,7 +3,7 @@ package global.citytech.auth.controller;
 
 import global.citytech.auth.service.LoginService;
 import global.citytech.auth.service.adaptor.dto.LoginDto;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;

@@ -1,7 +1,7 @@
 package global.citytech.transaction.service.request;
 
 import global.citytech.transaction.service.adapter.TransactionRequestDto;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 
 public interface TransactionService {
 

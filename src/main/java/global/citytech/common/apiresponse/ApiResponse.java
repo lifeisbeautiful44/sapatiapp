@@ -1,4 +1,4 @@
-package global.citytech.user.service.adaptor;
+package global.citytech.common.apiresponse;
 
 import io.micronaut.serde.annotation.Serdeable;
 

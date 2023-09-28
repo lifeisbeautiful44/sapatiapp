@@ -1,10 +1,11 @@
 package global.citytech.auth.service;
 
 import global.citytech.auth.service.adaptor.dto.LoginDto;
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.exception.CustomResponseException;
+import global.citytech.notification.CheckPaymentDeadLine;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.util.Optional;
@@ -12,6 +13,9 @@ import java.util.Optional;
 public class LoginServiceImpl implements LoginService {
     @Inject
     UserRepository userRepository;
+
+    @Inject
+    CheckPaymentDeadLine checkService;
     public LoginServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -23,6 +27,7 @@ public class LoginServiceImpl implements LoginService {
          if (userDetails.isPresent()) {
                 User userExists = userDetails.get();
                 if (userExists.getPassword().equals(loginRequest.getPassword())) {
+                    checkPaymentDeadline(loginRequest.getUserName());
                     return new ApiResponse<>(200, userExists.getUserName() + " has been successfully login. ", "Account Type: " + userExists.getUserType());
 
                 } else {
@@ -32,7 +37,12 @@ public class LoginServiceImpl implements LoginService {
                 throw new CustomResponseException(400, "bad request","User not found");
             }
         }
-   private void  validateLoginRequest(LoginDto loginRequest)
+
+    private void checkPaymentDeadline(String userName) {
+        checkService.findThePaymentDate(userName);
+    }
+
+    private void  validateLoginRequest(LoginDto loginRequest)
     {
         if(loginRequest.getUserName().isEmpty())
         {

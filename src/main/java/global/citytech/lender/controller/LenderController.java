@@ -4,13 +4,11 @@ package global.citytech.lender.controller;
 import global.citytech.transaction.service.acceptrequest.TransactionAcceptRequest;
 import global.citytech.transaction.service.acceptrequest.TransactionAcceptResponse;
 import global.citytech.transaction.service.adapter.TransactionAcceptDto;
-import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryDto;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryListService;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import jakarta.inject.Inject;
 

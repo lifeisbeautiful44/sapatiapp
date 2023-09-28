@@ -1,4 +1,4 @@
-package global.citytech.exception;
+package global.citytech.common.exception;
 
 
 

@@ -2,7 +2,7 @@ package global.citytech.transaction.service.payment;
 
 import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionPaymentDto;
@@ -11,7 +11,7 @@ import global.citytech.transactionhistory.repository.TransactionHistoryRepositor
 import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;

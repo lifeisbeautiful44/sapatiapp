@@ -1,13 +1,14 @@
 package global.citytech.transactionhistory.service.transactionhistorylist;
 
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.BlackList;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -22,9 +23,14 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     @Inject
     TransactionHistoryRepository transactionHistoryRepository;
 
+    @Inject
+    BlackList blackList;
+
     @Override
     public ApiResponse<List<TransactionHistoryResponse>> findAllTransactionHistory(TransactionHistoryDto transactionHistory) {
 
+
+        checkIfUserIsBlackListed(transactionHistory);
         validateTransactionHistory(transactionHistory);
         User user = getUserByUsernameOrThrow(transactionHistory.getUserName());
         List<TransactionHistoryResponse> response = new ArrayList<>();
@@ -82,6 +88,15 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
             throw new CustomResponseException(400, "bad request", "User is not verified.");
         }
         return user;
+    }
+
+    private void checkIfUserIsBlackListed(TransactionHistoryDto transactionHistory) {
+        String isUserBlacklisted =  transactionHistory.getUserName();
+        Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
+        if(user.isPresent())
+        {
+            blackList.isUserBlacklisted(user.get().getId());
+        }
     }
 
 }

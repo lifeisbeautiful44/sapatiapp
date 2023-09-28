@@ -2,19 +2,21 @@ package global.citytech.transaction.service.acceptrequest;
 
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
 import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
-import global.citytech.exception.CustomResponseException;
+import global.citytech.common.BlackList;
+import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionAcceptDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.user.service.adaptor.ApiResponse;
+import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Inject
@@ -29,9 +31,14 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     @Inject
     private TransactionHistoryService transactionHistoryService;
 
+    @Inject
+    private BlackList blackList;
+
 
     @Override
     public ApiResponse<TransactionAcceptResponse> acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
+
+        checkIfUserIsBlackListed(acceptTransaction);
 
         validateAcceptTransactionRequest(acceptTransaction);
         //for lender
@@ -49,7 +56,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
                     );
             //if the lender has sufficient amount or not
             checkBalanceService.checkLenderBalance(pendingTransaction, pendingTransaction.getAmount());
-            pendingTransaction.setStatus("ACCEPTED");
+            pendingTransaction.setStatus(acceptTransaction.getStatus());
             pendingTransaction.setInterestRate(acceptTransaction.getInterestRate());
             pendingTransaction.setPaymentAcceptedDate(LocalDateTime.now());
 
@@ -66,13 +73,9 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
             transactionAcceptResponse.setStatus(pendingTransaction.getStatus());
             OffsetDateTime offSetRequestDate = OffsetDateTime.parse(pendingTransaction.getRequestDate());
             transactionAcceptResponse.setRequestedDate(offSetRequestDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a")));
-
             transactionAcceptResponse.setInterestRate(pendingTransaction.getInterestRate());
-
             OffsetDateTime offSetAccepetedPaymentDate = OffsetDateTime.parse(pendingTransaction.getRequestDate());
             transactionAcceptResponse.setPaymentAcceptedDate(offSetAccepetedPaymentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a")));
-
-
             return new ApiResponse<>(200, "Money request Accepted", transactionAcceptResponse);
 
         } else {
@@ -81,8 +84,17 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
         }
     }
 
+    private void checkIfUserIsBlackListed(TransactionAcceptDto acceptTransaction) {
+        String isUserBlacklisted =  acceptTransaction.getBorrowerUserName();
+        Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
+        if(user.isPresent())
+        {
+            blackList.isUserBlacklisted(user.get().getId());
+        }
+    }
+
     private void validateAcceptTransactionRequest(TransactionAcceptDto acceptTransactionRequest) {
-        System.out.println("acceptTransactionRequest.getInterestRate()\\ = " + acceptTransactionRequest.getInterestRate());
+        System.out.println("acceptTransactionRequest.getInterestRate() = " + acceptTransactionRequest.getInterestRate());
 
     if(acceptTransactionRequest.getLenderUserName().isEmpty() || acceptTransactionRequest.getBorrowerUserName().isEmpty() || acceptTransactionRequest.getInterestRate().isNaN())
     {
@@ -91,6 +103,10 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     if(acceptTransactionRequest.getInterestRate() < 0)
     {
         throw new CustomResponseException(400, "bad request", "Interest Rate should be greater than Zero.");
+    }
+    if( !(acceptTransactionRequest.getStatus().equals("ACCEPTED") ) && !(acceptTransactionRequest.getStatus().equals("REJECTED")))
+    {
+        throw new CustomResponseException(400, "bad request", "Provide two option accept or reject");
     }
     }
     private User validateLender(TransactionAcceptDto transactionAcceptDto) {
