@@ -103,6 +103,7 @@ public class CashFlowServiceImpl implements CashFlowSevice {
             throw new CustomResponseException(400, "bad request", "Transaction limit is only 50000.");
         }
 
+
     }
     private void checkIfUserIsBlackListed(CashDto cashDto) {
         String isUserBlacklisted =  cashDto.getUserName();

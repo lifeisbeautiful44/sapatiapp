@@ -21,13 +21,8 @@ public class LenderController {
     TransactionHistoryListService transactionHistoryList;
     @Put("/accept-money-request")
     public HttpResponse<ApiResponse<TransactionAcceptResponse>> acceptTransactionRequest(@Body  TransactionAcceptDto acceptDto) {
-       // try {
             ApiResponse acceptedTransactionRequest = transactionAcceptRequest.acceptTransactionRequest(acceptDto);
             return HttpResponse.ok().body(acceptedTransactionRequest);
-//        } catch (IllegalArgumentException e) {
-//            return HttpResponse.badRequest().body(new ApiResponse<>(400, "failed", e.getMessage()));
-//        }
-
     }
 
 //    @Post("/list")

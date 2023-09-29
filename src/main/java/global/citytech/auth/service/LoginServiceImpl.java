@@ -2,7 +2,7 @@ package global.citytech.auth.service;
 
 import global.citytech.auth.service.adaptor.dto.LoginDto;
 import global.citytech.common.exception.CustomResponseException;
-import global.citytech.notification.CheckPaymentDeadLine;
+import global.citytech.notification.service.CheckPaymentDeadLineService;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.common.apiresponse.ApiResponse;
@@ -15,7 +15,7 @@ public class LoginServiceImpl implements LoginService {
     UserRepository userRepository;
 
     @Inject
-    CheckPaymentDeadLine checkService;
+    CheckPaymentDeadLineService checkPaymentDeadLineService;
     public LoginServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
          if (userDetails.isPresent()) {
                 User userExists = userDetails.get();
                 if (userExists.getPassword().equals(loginRequest.getPassword())) {
-                    checkPaymentDeadline(loginRequest.getUserName());
+                    checkPaymentDeadLineService.findThePaymentDeadline(loginRequest.getUserName());
                     return new ApiResponse<>(200, userExists.getUserName() + " has been successfully login. ", "Account Type: " + userExists.getUserType());
 
                 } else {
@@ -38,9 +38,7 @@ public class LoginServiceImpl implements LoginService {
             }
         }
 
-    private void checkPaymentDeadline(String userName) {
-        checkService.findThePaymentDate(userName);
-    }
+
 
     private void  validateLoginRequest(LoginDto loginRequest)
     {

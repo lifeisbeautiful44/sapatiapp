@@ -1,4 +1,4 @@
-package global.citytech.notification;
+package global.citytech.notification.service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

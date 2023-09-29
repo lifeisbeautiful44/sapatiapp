@@ -4,7 +4,7 @@ package global.citytech.user.controller;
 import global.citytech.cashflow.service.cashflow.LoadBalanceResponse;
 import global.citytech.cashflow.service.dto.CashDto;
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
-import global.citytech.notification.CheckPaymentDeadLine;
+import global.citytech.notification.service.CheckPaymentDeadLineService;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryDto;
 import global.citytech.transactionhistory.service.transactionhistorylist.TransactionHistoryListService;
 import global.citytech.common.apiresponse.ApiResponse;
@@ -32,7 +32,7 @@ public class UserResource {
     @Inject
    private  TransactionHistoryListService transactionHistoryList;
     @Inject
-    private CheckPaymentDeadLine checkService;
+    private CheckPaymentDeadLineService checkService;
 
 
 
@@ -48,12 +48,12 @@ public class UserResource {
         return HttpResponse.ok().body(registerUser);
     }
 
-    @Put("/status")
+    @Put("/approve/user")
     public HttpResponse<ApiResponse<String>> activateUser(@Body UserStatusDto userStatus) {
         ApiResponse<String> userStatusUpdated = updateUserStatusService.updateUserStatus(userStatus);
         return HttpResponse.ok().body(userStatusUpdated);
     }
-    @Post("/loadBalance")
+    @Post("/loadbalance")
     public HttpResponse<ApiResponse<LoadBalanceResponse>> loadBalance(@Body CashDto cashDto)
     {
 
@@ -63,7 +63,7 @@ public class UserResource {
 
     }
 
-    @Post("/list")
+    @Post("/transaction/list")
     public HttpResponse<ApiResponse> getList(@Body TransactionHistoryDto transactionDto)
     {
         ApiResponse  response =   transactionHistoryList.findAllTransactionHistory(transactionDto);
@@ -75,7 +75,5 @@ public class UserResource {
     {
         updateBlackListUserStatusService.updateBlackListUser(userStatusDto);
     }
-
-
 
 }
