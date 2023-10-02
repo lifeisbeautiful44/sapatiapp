@@ -2,7 +2,7 @@ package global.citytech.transaction.service.acceptrequest;
 
 import global.citytech.cashflow.service.cashflow.CashFlowSevice;
 import global.citytech.cashflow.service.balancevalidation.CheckBalanceService;
-import global.citytech.common.BlackList;
+import global.citytech.user.service.blacklist.BlackListService;
 import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.transaction.repository.TransacitionRepository;
@@ -32,7 +32,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
     private TransactionHistoryService transactionHistoryService;
 
     @Inject
-    private BlackList blackList;
+    private BlackListService blackListService;
 
 
     @Override
@@ -89,7 +89,7 @@ public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
         Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
         if(user.isPresent())
         {
-            blackList.isUserBlacklisted(user.get().getId());
+            blackListService.isUserBlacklisted(user.get().getId());
         }
     }
 

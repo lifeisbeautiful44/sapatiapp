@@ -3,10 +3,9 @@ package global.citytech.cashflow.service.cashflow;
 import global.citytech.cashflow.repository.CashFlow;
 import global.citytech.cashflow.repository.CashFlowRepository;
 import global.citytech.cashflow.service.dto.CashDto;
-import global.citytech.common.BlackList;
+import global.citytech.user.service.blacklist.BlackListService;
 import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.Transaction;
-import global.citytech.transaction.service.adapter.TransactionRequestDto;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.common.apiresponse.ApiResponse;
@@ -20,7 +19,7 @@ public class CashFlowServiceImpl implements CashFlowSevice {
     @Inject
     private UserRepository userRepository;
     @Inject
-    private BlackList blackList;
+    private BlackListService blackListService;
 
 
     /*saves the newly created user in CashInfo Table*/
@@ -110,7 +109,7 @@ public class CashFlowServiceImpl implements CashFlowSevice {
         Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
         if(user.isPresent())
         {
-            blackList.isUserBlacklisted(user.get().getId());
+            blackListService.isUserBlacklisted(user.get().getId());
         }
     }
 

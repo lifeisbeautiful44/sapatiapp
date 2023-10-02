@@ -1,4 +1,4 @@
-package global.citytech.common;
+package global.citytech.user.service.blacklist;
 
 import global.citytech.common.exception.CustomResponseException;
 import global.citytech.user.repository.User;
@@ -6,7 +6,7 @@ import global.citytech.user.repository.UserRepository;
 import jakarta.inject.Inject;
 import java.util.Optional;
 
-public class BlackList {
+public class BlackListService {
     @Inject
     private UserRepository userRepository;
     public void isUserBlacklisted(Long userId) {

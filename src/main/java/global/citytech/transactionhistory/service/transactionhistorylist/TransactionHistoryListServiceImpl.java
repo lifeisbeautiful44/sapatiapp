@@ -1,6 +1,6 @@
 package global.citytech.transactionhistory.service.transactionhistorylist;
 
-import global.citytech.common.BlackList;
+import global.citytech.user.service.blacklist.BlackListService;
 import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
@@ -24,7 +24,7 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     TransactionHistoryRepository transactionHistoryRepository;
 
     @Inject
-    BlackList blackList;
+    BlackListService blackListService;
 
     @Override
     public ApiResponse<List<TransactionHistoryResponse>> findAllTransactionHistory(TransactionHistoryDto transactionHistory) {
@@ -95,7 +95,7 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
         Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
         if(user.isPresent())
         {
-            blackList.isUserBlacklisted(user.get().getId());
+            blackListService.isUserBlacklisted(user.get().getId());
         }
     }
 

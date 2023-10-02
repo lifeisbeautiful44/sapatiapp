@@ -1,6 +1,6 @@
 package global.citytech.transaction.service.request;
 
-import global.citytech.common.BlackList;
+import global.citytech.user.service.blacklist.BlackListService;
 import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
@@ -16,7 +16,6 @@ import jakarta.inject.Inject;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 public class TransactionServiceImpl implements TransactionService {
@@ -32,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionHistoryRepository transactionHistoryRepository;
 
     @Inject
-    private BlackList blackList;
+    private BlackListService blackListService;
 
     @Override
     public ApiResponse<TransactionResponse> requestMoney(TransactionRequestDto transactionDto) {
@@ -65,7 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
        Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
        if(user.isPresent())
        {
-           blackList.isUserBlacklisted(user.get().getId());
+           blackListService.isUserBlacklisted(user.get().getId());
        }
     }
 
