@@ -28,7 +28,7 @@ public class AddUserServiceImpl implements AddUserService {
         return createUserApiResponse;
     }
 
-    private void validateUserRequest(CreateUserDto userDto) {
+    public void validateUserRequest(CreateUserDto userDto) {
         if (userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getUserType().isEmpty() || userDto.getPassword().isEmpty() || userDto.getConfirmPassword().isEmpty() || userDto.getEmail().isEmpty()) {
             throw new CustomResponseException(400, "bad request", "All the field are mandatory.");
         }

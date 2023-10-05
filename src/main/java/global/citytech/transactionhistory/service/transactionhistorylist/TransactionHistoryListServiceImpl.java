@@ -22,7 +22,6 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     TransacitionRepository transactionRepository;
     @Inject
     TransactionHistoryRepository transactionHistoryRepository;
-
     @Inject
     BlackListService blackListService;
 
