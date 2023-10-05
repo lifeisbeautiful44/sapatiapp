@@ -7,9 +7,11 @@ import jakarta.inject.Inject;
 
 public class TransactionHistoryServiceImpl implements TransactionHistoryService {
 
-    @Inject
     TransactionHistoryRepository transactionHistoryRepository;
-
+    @Inject
+    public TransactionHistoryServiceImpl(TransactionHistoryRepository transactionHistoryRepository) {
+        this.transactionHistoryRepository = transactionHistoryRepository;
+    }
 
     @Override
     public void create(Transaction transactionRequest) {

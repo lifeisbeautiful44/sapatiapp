@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BorrowerServiceImpl implements BorrowerService {
-    @Inject
    private  UserRepository userRepository;
 
-
+    @Inject
+    public BorrowerServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public ApiResponse<List<LenderResponse>> getLenderList() {

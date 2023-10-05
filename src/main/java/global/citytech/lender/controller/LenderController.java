@@ -16,7 +16,6 @@ import jakarta.inject.Inject;
 public class LenderController {
     @Inject
     TransactionAcceptRequest transactionAcceptRequest;
-
     @Inject
     TransactionHistoryListService transactionHistoryList;
     @Put("/accept-money-request")

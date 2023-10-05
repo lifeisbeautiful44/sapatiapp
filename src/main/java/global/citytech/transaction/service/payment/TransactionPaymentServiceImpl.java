@@ -19,20 +19,26 @@ import java.time.temporal.ChronoUnit;
 
 public class TransactionPaymentServiceImpl implements TransactionPaymentService {
 
-    @Inject
     private CashFlowSevice cashFlowSevice;
 
-    @Inject
     private CheckBalanceService checkBalanceService;
-    @Inject
     private UserRepository userRepository;
-    @Inject
+
     private TransactionHistoryRepository transactionHistoryRepository;
-    @Inject
     private TransactionHistoryService transactionHistoryService;
 
-    @Inject
     private TransacitionRepository transacitionRepository;
+
+
+    @Inject
+    public TransactionPaymentServiceImpl(CashFlowSevice cashFlowSevice, CheckBalanceService checkBalanceService, UserRepository userRepository, TransactionHistoryRepository transactionHistoryRepository, TransactionHistoryService transactionHistoryService, TransacitionRepository transacitionRepository) {
+        this.cashFlowSevice = cashFlowSevice;
+        this.checkBalanceService = checkBalanceService;
+        this.userRepository = userRepository;
+        this.transactionHistoryRepository = transactionHistoryRepository;
+        this.transactionHistoryService = transactionHistoryService;
+        this.transacitionRepository = transacitionRepository;
+    }
 
     public ApiResponse<TransactionPaymentBackResponse> makePayment(TransactionPaymentDto transactionPaymentDto) {
 

@@ -11,10 +11,14 @@ import java.util.Optional;
 
 public class CheckBalanceServiceImpl implements CheckBalanceService {
 
-    @Inject
     private CashFlowRepository cashFlowRepository;
-    @Inject
     private UserRepository userRepository;
+
+    @Inject
+    public CheckBalanceServiceImpl(CashFlowRepository cashFlowRepository, UserRepository userRepository) {
+        this.cashFlowRepository = cashFlowRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Boolean checkLenderBalance(Transaction transaction, double checkBalance) {

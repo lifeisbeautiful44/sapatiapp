@@ -7,39 +7,35 @@ import global.citytech.common.exception.CustomResponseException;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
 import global.citytech.user.service.adaptor.dto.CreateUserDto;
-import jakarta.inject.Inject;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 
-
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 
-
+@MicronautTest
 public class AddUserServiceImplTest {
 
 
-    private  AddUserServiceImpl addUserService;
-    private  UserRepository userRepository;
+    private AddUserServiceImpl addUserService;
+    private UserRepository userRepository;
 
 
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         this.userRepository = Mockito.mock(UserRepository.class);
-         this.addUserService = new AddUserServiceImpl(userRepository);
+        this.addUserService = new AddUserServiceImpl(userRepository);
     }
 
     @Test
-    void shouldCreateUserIfAllFieldArePresent()
-    {
+    void shouldCreateUserIfAllFieldArePresent() {
 //given
         CreateUserDto createUserDto = new CreateUserDto(
                 1l,
@@ -48,18 +44,16 @@ public class AddUserServiceImplTest {
                 "srijansil123",
                 "srijan@gmail.com",
                 "test123",
-                 "test123",
+                "test123",
                 "Borrower",
                 false,
                 LocalDateTime.now().toString()
         );
 
-        User savedUser = new User(); // Mocked saved user
+        User savedUser = new User();
         Mockito.when(userRepository.save(any(User.class))).thenReturn(savedUser);
-
         // When
         ApiResponse<UserReponseInfo> response = addUserService.registerUser(createUserDto);
-
         // Then
         Assertions.assertNotNull(response);
         assertEquals(200, response.getCode());
@@ -68,24 +62,24 @@ public class AddUserServiceImplTest {
 
     @Test
     void shouldThrowExceptionWhenFieldsAreEmpty() {
-        // Given: Create a CreateUserDto with empty fields
+        // Given
         CreateUserDto createUserDto = new CreateUserDto(
                 1L,
-                "",     // Empty first name
-                "",     // Empty last name
-                "",     // Empty username
-                "",     // Empty email
-                "",     // Empty password
-                "",     // Empty confirmPassword
-                "",     // Empty userType
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
                 false,
                 LocalDateTime.now().toString()
         );
 
-        // When: Attempt to register a user with empty fields
+        // When
         Executable executable = () -> addUserService.registerUser(createUserDto);
 
-        // Then: Verify that a CustomResponseException is thrown with the expected details
+        // Then
         CustomResponseException exception = assertThrows(CustomResponseException.class, executable);
 
         assertEquals("All the field are mandatory.", exception.getData());
