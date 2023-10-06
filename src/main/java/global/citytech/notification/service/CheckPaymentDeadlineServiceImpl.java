@@ -15,16 +15,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class CheckPaymentDeadlineServiceImpl implements CheckPaymentDeadLineService{
-    @Inject
     private TransactionHistoryRepository transactionHistoryRepository;
-    @Inject
     private TransacitionRepository transacitionRepository;
-
-    @Inject
     private UserRepository userRepository;
+    private UpdateBlackListUserStatusService updateBlackListUserStatusService;
 
     @Inject
-    private UpdateBlackListUserStatusService updateBlackListUserStatusService;
+    public CheckPaymentDeadlineServiceImpl(TransactionHistoryRepository transactionHistoryRepository, TransacitionRepository transacitionRepository, UserRepository userRepository, UpdateBlackListUserStatusService updateBlackListUserStatusService) {
+        this.transactionHistoryRepository = transactionHistoryRepository;
+        this.transacitionRepository = transacitionRepository;
+        this.userRepository = userRepository;
+        this.updateBlackListUserStatusService = updateBlackListUserStatusService;
+    }
 
     public void findThePaymentDeadline(String userName) {
         Optional<User> user = userRepository.findByUserNameAndUserType(userName, "BORROWER");

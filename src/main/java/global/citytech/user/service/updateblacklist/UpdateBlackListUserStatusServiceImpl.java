@@ -8,9 +8,12 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 
 public class UpdateBlackListUserStatusServiceImpl implements UpdateBlackListUserStatusService {
+    private UserRepository userRepository;
 
     @Inject
-    private UserRepository userRepository;
+    public UpdateBlackListUserStatusServiceImpl (UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void updateBlackListUser(UserStatusDto userStatus) {

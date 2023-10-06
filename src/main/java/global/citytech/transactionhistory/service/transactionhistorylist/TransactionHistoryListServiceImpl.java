@@ -1,6 +1,6 @@
 package global.citytech.transactionhistory.service.transactionhistorylist;
 
-import global.citytech.user.service.blacklist.BlackListService;
+import global.citytech.common.apiresponse.ApiResponse;
 import global.citytech.common.exception.CustomResponseException;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
@@ -8,7 +8,7 @@ import global.citytech.transactionhistory.repository.TransactionHistory;
 import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.common.apiresponse.ApiResponse;
+import global.citytech.user.service.blacklist.BlackListService;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -16,15 +16,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class TransactionHistoryListServiceImpl implements TransactionHistoryListService {
-    @Inject
-    UserRepository userRepository;
-    @Inject
-    TransacitionRepository transactionRepository;
-    @Inject
-    TransactionHistoryRepository transactionHistoryRepository;
-    @Inject
-    BlackListService blackListService;
+    private UserRepository userRepository;
+    private TransacitionRepository transactionRepository;
+    private TransactionHistoryRepository transactionHistoryRepository;
+    private BlackListService blackListService;
 
+    @Inject
+    public TransactionHistoryListServiceImpl(UserRepository userRepository, TransacitionRepository transactionRepository, TransactionHistoryRepository transactionHistoryRepository, BlackListService blackListService) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+        this.transactionHistoryRepository = transactionHistoryRepository;
+        this.blackListService = blackListService;
+    }
     @Override
     public ApiResponse<List<TransactionHistoryResponse>> findAllTransactionHistory(TransactionHistoryDto transactionHistory) {
 
@@ -70,6 +73,7 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
             return new ApiResponse<>(200, "No transaction history", response);
         }
     }
+
     private void validateTransactionHistory(TransactionHistoryDto transactionHistory) {
 
         if (transactionHistory.getUserName().isEmpty()) {
@@ -81,7 +85,9 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     private User getUserByUsernameOrThrow(String username) {
         User user = userRepository.findByUserName(username)
                 .orElseThrow(() ->
-                        { throw new CustomResponseException(400, "bad request", "No such User exists.");}
+                        {
+                            throw new CustomResponseException(400, "bad request", "No such User exists.");
+                        }
                 );
         if (!user.getStatus()) {
             throw new CustomResponseException(400, "bad request", "User is not verified.");
@@ -90,10 +96,9 @@ public class TransactionHistoryListServiceImpl implements TransactionHistoryList
     }
 
     private void checkIfUserIsBlackListed(TransactionHistoryDto transactionHistory) {
-        String isUserBlacklisted =  transactionHistory.getUserName();
-        Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
-        if(user.isPresent())
-        {
+        String isUserBlacklisted = transactionHistory.getUserName();
+        Optional<User> user = userRepository.findByUserName(isUserBlacklisted);
+        if (user.isPresent()) {
             blackListService.isUserBlacklisted(user.get().getId());
         }
     }

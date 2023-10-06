@@ -7,8 +7,13 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 
 public class BlackListService {
-    @Inject
     private UserRepository userRepository;
+
+    @Inject
+    public BlackListService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public void isUserBlacklisted(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {

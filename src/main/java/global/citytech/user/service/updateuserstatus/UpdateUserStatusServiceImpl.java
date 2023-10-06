@@ -9,10 +9,14 @@ import global.citytech.common.apiresponse.ApiResponse;
 import jakarta.inject.Inject;
 
 public class UpdateUserStatusServiceImpl implements UpdateUserStatusService {
-    @Inject
     private CashFlowSevice newVerifiedUserCashTable;
-    @Inject
     private UserRepository userRepository;
+
+    @Inject
+    public UpdateUserStatusServiceImpl(CashFlowSevice newVerifiedUserCashTable, UserRepository userRepository) {
+        this.newVerifiedUserCashTable = newVerifiedUserCashTable;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public ApiResponse<String> updateUserStatus(UserStatusDto userStatusDto) {

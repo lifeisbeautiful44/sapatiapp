@@ -33,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
                 return new ApiResponse<>(200, userExists.getUserName() + " has been successfully login. ", "Account Type: " + userExists.getUserType());
 
             } else {
-                throw new CustomResponseException(400, "bad request", "password doesnot match.");
+                throw new CustomResponseException(400, "bad request", "password doesn't match.");
             }
         } else {
             throw new CustomResponseException(400, "bad request", "User not found");

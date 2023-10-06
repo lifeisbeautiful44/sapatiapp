@@ -14,13 +14,15 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 
 public class CashFlowServiceImpl implements CashFlowSevice {
-    @Inject
     private CashFlowRepository cashFlowRepository;
-    @Inject
     private UserRepository userRepository;
-    @Inject
     private BlackListService blackListService;
-
+    @Inject
+    public CashFlowServiceImpl(CashFlowRepository cashFlowRepository, UserRepository userRepository, BlackListService blackListService) {
+        this.cashFlowRepository = cashFlowRepository;
+        this.userRepository = userRepository;
+        this.blackListService = blackListService;
+    }
 
     /*saves the newly created user in CashInfo Table*/
     @Override

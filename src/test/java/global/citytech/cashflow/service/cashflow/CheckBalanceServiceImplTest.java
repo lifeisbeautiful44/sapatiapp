@@ -51,7 +51,7 @@ public class CheckBalanceServiceImplTest {
     @Test
     public void testCheckLenderBalanceWithInsufficientBalance() {
         CashFlow mockCashFlow = new CashFlow();
-        mockCashFlow.setCashAmount(200.0);
+        mockCashFlow.setCashAmount(0.0);
 
         Mockito.when(cashFlowRepository.findByLenderId(anyLong())).thenReturn(java.util.Optional.of(mockCashFlow));
         Transaction transaction = new Transaction();

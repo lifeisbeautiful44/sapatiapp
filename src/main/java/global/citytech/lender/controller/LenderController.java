@@ -14,10 +14,14 @@ import jakarta.inject.Inject;
 
 @Controller("/api/v1/")
 public class LenderController {
-    @Inject
     TransactionAcceptRequest transactionAcceptRequest;
-    @Inject
     TransactionHistoryListService transactionHistoryList;
+    @Inject
+    public LenderController(TransactionAcceptRequest transactionAcceptRequest, TransactionHistoryListService transactionHistoryList) {
+        this.transactionAcceptRequest = transactionAcceptRequest;
+        this.transactionHistoryList = transactionHistoryList;
+    }
+
     @Put("/accept-money-request")
     public HttpResponse<ApiResponse<TransactionAcceptResponse>> acceptTransactionRequest(@Body  TransactionAcceptDto acceptDto) {
             ApiResponse acceptedTransactionRequest = transactionAcceptRequest.acceptTransactionRequest(acceptDto);

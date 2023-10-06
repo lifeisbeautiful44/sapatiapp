@@ -1,17 +1,17 @@
 package global.citytech.transaction.service.request;
 
-import global.citytech.user.service.blacklist.BlackListService;
+import global.citytech.common.apiresponse.ApiResponse;
 import global.citytech.common.exception.CustomResponseException;
-import global.citytech.transactionhistory.repository.TransactionHistory;
-import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
-import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.transaction.repository.TransacitionRepository;
 import global.citytech.transaction.repository.Transaction;
 import global.citytech.transaction.service.adapter.TransactionRequestDto;
 import global.citytech.transaction.service.adapter.mapper.Mapper;
+import global.citytech.transactionhistory.repository.TransactionHistory;
+import global.citytech.transactionhistory.repository.TransactionHistoryRepository;
+import global.citytech.transactionhistory.service.TransactionHistoryService;
 import global.citytech.user.repository.User;
 import global.citytech.user.repository.UserRepository;
-import global.citytech.common.apiresponse.ApiResponse;
+import global.citytech.user.service.blacklist.BlackListService;
 import jakarta.inject.Inject;
 
 import java.time.OffsetDateTime;
@@ -20,18 +20,22 @@ import java.util.Optional;
 
 public class TransactionServiceImpl implements TransactionService {
 
-    @Inject
     private TransacitionRepository transacitonRepository;
-    @Inject
     private UserRepository userRepository;
-    @Inject
     private TransactionHistoryService transactionHistoryService;
 
-    @Inject
     private TransactionHistoryRepository transactionHistoryRepository;
 
-    @Inject
     private BlackListService blackListService;
+
+    @Inject
+    public TransactionServiceImpl(TransacitionRepository transacitonRepository, UserRepository userRepository, TransactionHistoryService transactionHistoryService, TransactionHistoryRepository transactionHistoryRepository, BlackListService blackListService) {
+        this.transacitonRepository = transacitonRepository;
+        this.userRepository = userRepository;
+        this.transactionHistoryService = transactionHistoryService;
+        this.transactionHistoryRepository = transactionHistoryRepository;
+        this.blackListService = blackListService;
+    }
 
     @Override
     public ApiResponse<TransactionResponse> requestMoney(TransactionRequestDto transactionDto) {
@@ -60,22 +64,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void checkIfUserIsBlackListed(TransactionRequestDto transactionDto) {
-       String isUserBlacklisted =  transactionDto.getBorrowerUserName();
-       Optional<User> user =  userRepository.findByUserName(isUserBlacklisted);
-       if(user.isPresent())
-       {
-           blackListService.isUserBlacklisted(user.get().getId());
-       }
+        String isUserBlacklisted = transactionDto.getBorrowerUserName();
+        Optional<User> user = userRepository.findByUserName(isUserBlacklisted);
+        if (user.isPresent()) {
+            blackListService.isUserBlacklisted(user.get().getId());
+        }
     }
 
     private void validateTransactionDtoRequest(TransactionRequestDto transactionDto) {
 
-        if(transactionDto.getBorrowerUserName().isEmpty() || transactionDto.getLenderUserName().isEmpty()   )
-        {
+        if (transactionDto.getBorrowerUserName().isEmpty() || transactionDto.getLenderUserName().isEmpty()) {
             throw new CustomResponseException(400, "bad request", "All the fields are mandatory.");
         }
-        if(transactionDto.getAmount() < 10)
-        {
+        if (transactionDto.getAmount() < 10) {
             throw new CustomResponseException(400, "bad request", "Amount should be greater than Rs 10..");
 
         }
@@ -100,7 +101,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         return userRepository.findByUserNameAndUserType(lenderUserName, "LENDER").orElseThrow(
                 () -> {
-                    throw new CustomResponseException(400, "bad request", lenderUserName +  "+ doesnot exist as  LENDER.");
+                    throw new CustomResponseException(400, "bad request", lenderUserName + "+ doesnot exist as  LENDER.");
                 }
         );
     }
@@ -136,9 +137,8 @@ public class TransactionServiceImpl implements TransactionService {
             throw new CustomResponseException(400, "bad request", "You already have pending transaction with the same user, transaction failed...");
         }
         //if the previous transaction is there then you should, if the borrower payment status is unpaid , then it cannot do request
-        Optional <TransactionHistory> previousUnPaidTransaction = transactionHistoryRepository.findByBorrowerIdAndPaymentStatus(borrowerId,"UNPAID");
-        if(previousUnPaidTransaction.isPresent())
-        {
+        Optional<TransactionHistory> previousUnPaidTransaction = transactionHistoryRepository.findByBorrowerIdAndPaymentStatus(borrowerId, "UNPAID");
+        if (previousUnPaidTransaction.isPresent()) {
             throw new CustomResponseException(400, "bad request", "You have previous UNPAID transaction..");
 
         }

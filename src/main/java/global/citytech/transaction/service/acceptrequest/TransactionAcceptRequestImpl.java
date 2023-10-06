@@ -19,21 +19,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class TransactionAcceptRequestImpl implements TransactionAcceptRequest {
-    @Inject
     private UserRepository userRepository;
-    @Inject
     private TransacitionRepository transacitonRepository;
-    @Inject
     private CashFlowSevice cashFlowSevice;
-
-    @Inject
     private CheckBalanceService checkBalanceService;
-    @Inject
     private TransactionHistoryService transactionHistoryService;
-
-    @Inject
     private BlackListService blackListService;
 
+    @Inject
+    public TransactionAcceptRequestImpl(UserRepository userRepository, TransacitionRepository transacitonRepository, CashFlowSevice cashFlowSevice, CheckBalanceService checkBalanceService, TransactionHistoryService transactionHistoryService, BlackListService blackListService) {
+        this.userRepository = userRepository;
+        this.transacitonRepository = transacitonRepository;
+        this.cashFlowSevice = cashFlowSevice;
+        this.checkBalanceService = checkBalanceService;
+        this.transactionHistoryService = transactionHistoryService;
+        this.blackListService = blackListService;
+    }
 
     @Override
     public ApiResponse<TransactionAcceptResponse> acceptTransactionRequest(TransactionAcceptDto acceptTransaction) {
